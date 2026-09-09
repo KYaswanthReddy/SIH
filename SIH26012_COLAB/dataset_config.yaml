@@ -1,0 +1,44 @@
+# SIH26012 Dataset & Patch Extraction Configuration
+
+dataset:
+  name: "CadastreVision-SIH26012"
+  crs: "EPSG:28992"
+  ground_sampling_distance_m: 0.25 # 0.25m per pixel
+  image_dimensions: [40002, 40002]
+  channels: 3
+
+paths:
+  images_dir: "data/images"
+  references_dir: "data/references"
+  brk_reference: "data/references/brk_reference.gpkg"
+  brt_bebouwde_kom: "data/references/brt_bebouwde_kom.gpkg"
+  sample_tiles_split: "data/references/sample_tiles_10k_split.gpkg"
+  processed_dir: "data/processed"
+  patches_dir: "data/processed/patches"
+  metadata_dir: "data/processed/metadata"
+  visualizations_dir: "data/processed/visualizations"
+
+patch_extraction:
+  patch_size: [512, 512]
+  line_thickness: 2 # 2px boundary mask thickness (~0.5m ground equivalent)
+  min_boundary_pixels: 50 # Minimum boundary pixels to qualify as useful patch
+  empty_patch_ratio: 0.05 # Fraction of negative/empty patches retained for negative sampling
+  stride: 512 # Grid stride in pixels
+  targets:
+    train: 2500 # ~500 per training tile (5 tiles)
+    val: 600    # ~300 per val tile (2 tiles)
+    test: 600   # ~300 per test tile (2 tiles)
+
+splits:
+  train:
+    - "tile-100000-470000.tif"
+    - "tile-100000-500000.tif"
+    - "tile-220000-450000.tif"
+    - "tile-240000-460000.tif"
+    - "tile-180000-360000.tif"
+  val:
+    - "tile-190000-350000.tif"
+    - "tile-160000-490000.tif"
+  test:
+    - "tile-190000-310000.tif"
+    - "tile-170000-460000.tif"

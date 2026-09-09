@@ -1,0 +1,66 @@
+# SIH26012 Baseline Cadastral Segmentation Training Configuration
+
+experiment:
+  name: "baseline_unet_cadastre"
+  output_dir: "experiments/baseline"
+  checkpoint_dir: "experiments/baseline/checkpoints"
+  metrics_dir: "experiments/baseline/metrics"
+  predictions_dir: "experiments/baseline/predictions"
+  seed: 42
+
+data:
+  processed_dir: "data/processed"
+  metadata_dir: "data/processed/metadata"
+  train_metadata: "data/processed/metadata/patches_train.csv"
+  val_metadata: "data/processed/metadata/patches_val.csv"
+  test_metadata: "data/processed/metadata/patches_test.csv"
+  image_size: [512, 512]
+  in_channels: 3
+  out_channels: 1
+
+model:
+  architecture: "CadastreUNetBaseline"
+  encoder_channels: [32, 64, 128, 256, 512]
+  decoder_channels: [256, 128, 64, 32]
+  dropout: 0.1
+  use_residual: true
+
+loss:
+  focal_weight: 0.5
+  dice_weight: 0.5
+  focal:
+    alpha: 0.25
+    gamma: 2.0
+  dice:
+    smooth: 1.0
+
+training:
+  epochs: 20
+  batch_size: 16
+  learning_rate: 1.0e-4
+  weight_decay: 1.0e-4
+  optimizer: "AdamW"
+  scheduler: "CosineAnnealingLR"
+  min_lr: 1.0e-6
+  early_stopping_patience: 5
+  mixed_precision: true
+  gradient_clip: 1.0
+  num_workers: 0
+  pin_memory: false
+
+sanity_check:
+  enabled: true
+  num_samples: 128
+  epochs: 2
+
+augmentation:
+  horizontal_flip_prob: 0.5
+  vertical_flip_prob: 0.5
+  rotate90_prob: 0.5
+  brightness_contrast_prob: 0.3
+  brightness_limit: 0.15
+  contrast_limit: 0.15
+
+evaluation:
+  thresholds: [0.3, 0.4, 0.5, 0.6, 0.7]
+  default_threshold: 0.5

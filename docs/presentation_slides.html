@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIH26012 — Official Idea Presentation Deck | SkyGen</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Inter, Georgia & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Georgia:wght@700;900&display=swap" rel="stylesheet">
+  
+  <style>
+    @page {
+      size: 16in 9in;
+      margin: 0;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #0b1329;
+      color: #1e293b;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .serif-title {
+      font-family: 'Georgia', 'Times New Roman', serif;
+    }
+    .slide-canvas {
+      width: 16in;
+      height: 9in;
+      max-height: 9in;
+      min-height: 9in;
+      background: #ffffff;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      page-break-after: always;
+      break-after: page;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    .slide-canvas:last-of-type {
+      page-break-after: avoid !important;
+      break-after: avoid !important;
+    }
+    @media print {
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .slide-canvas {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        width: 16in !important;
+        height: 9in !important;
+        max-height: 9in !important;
+        min-height: 9in !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen py-8 flex flex-col items-center gap-8">
+
+  <!-- TOP ACTION BAR (Hidden during print) -->
+  <div class="no-print w-[16in] bg-slate-900 text-white px-8 py-4 rounded-xl flex items-center justify-between shadow-2xl border border-slate-700">
+    <div class="flex items-center gap-4">
+      <div class="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-lg shadow">
+        SIH
+      </div>
+      <div>
+        <h1 class="text-lg font-extrabold tracking-tight">Smart India Hackathon 2026 — Official PPT Deck</h1>
+        <p class="text-xs text-slate-400">Problem Statement: SIH26012 | Team: SkyGen (Team ID: 69110)</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="/SIH26012_Idea_Presentation.pptx" download class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-4 py-2.5 rounded-lg transition shadow flex items-center gap-2">
+        <span>📥 Download PPTX Deck</span>
+      </a>
+      <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-4 py-2.5 rounded-lg transition shadow flex items-center gap-2">
+        <span>🖨️ Save as PDF (Submission Ready)</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- SVG Definition: Exact SIH Bulb & Typography Logo -->
+  <svg style="display: none;">
+    <defs>
+      <g id="sih-logo-full">
+        <!-- Bulb Graphics -->
+        <g transform="translate(0, 5)">
+          <!-- Radiating rays -->
+          <line x1="50" y1="5" x2="50" y2="15" stroke="#475569" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="18" y1="20" x2="26" y2="28" stroke="#475569" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="82" y1="20" x2="74" y2="28" stroke="#475569" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="5" y1="52" x2="15" y2="52" stroke="#475569" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="95" y1="52" x2="85" y2="52" stroke="#475569" stroke-width="3.5" stroke-linecap="round"/>
+
+          <!-- Left Brain: Orange Circuit -->
+          <path d="M 50,18 C 32,18 20,30 20,48 C 20,62 30,70 38,82 L 38,94 L 50,94 Z" fill="#ea580c"/>
+          <path d="M 26,38 Q 33,34 37,42 T 28,56 Q 40,60 42,74 L 48,74" fill="none" stroke="#ffedd5" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="26" cy="38" r="2" fill="#ffffff"/>
+          <circle cx="28" cy="56" r="2" fill="#ffffff"/>
+          <circle cx="48" cy="74" r="2" fill="#ffffff"/>
+          <path d="M 37,25 Q 46,30 43,42 T 34,56" fill="none" stroke="#ffedd5" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="37" cy="25" r="2" fill="#ffffff"/>
+          <circle cx="34" cy="56" r="2" fill="#ffffff"/>
+
+          <!-- Right Brain: Green Binary -->
+          <path d="M 50,18 C 68,18 80,30 80,48 C 80,62 70,70 62,82 L 62,94 L 50,94 Z" fill="#16a34a"/>
+          <text x="53" y="34" font-family="Courier, monospace" font-size="8.5" font-weight="900" fill="#ffffff" letter-spacing="0.5">1010</text>
+          <text x="52" y="46" font-family="Courier, monospace" font-size="8.5" font-weight="900" fill="#ffffff" letter-spacing="0.5">01010</text>
+          <text x="52" y="58" font-family="Courier, monospace" font-size="8.5" font-weight="900" fill="#ffffff" letter-spacing="0.5">101010</text>
+          <text x="52" y="70" font-family="Courier, monospace" font-size="8.5" font-weight="900" fill="#ffffff" letter-spacing="0.5">010101</text>
+          <text x="53" y="82" font-family="Courier, monospace" font-size="8.5" font-weight="900" fill="#ffffff" letter-spacing="0.5">10101</text>
+          <text x="55" y="92" font-family="Courier, monospace" font-size="8.5" font-weight="900" fill="#ffffff" letter-spacing="0.5">010</text>
+
+          <!-- Bulb Base: SIH Base -->
+          <path d="M 38,94 L 62,94 L 59,108 L 41,108 Z" fill="#94a3b8" stroke="#475569" stroke-width="1.2"/>
+          <text x="50" y="105" font-family="Arial Black, sans-serif" font-size="9" font-weight="900" fill="#0f172a" text-anchor="middle">SIH</text>
+          <path d="M 42,108 L 58,108 L 55,114 L 45,114 Z" fill="#64748b"/>
+          <path d="M 45,114 L 55,114 L 53,117 L 47,117 Z" fill="#334155"/>
+        </g>
+
+        <!-- Typography Next to Logo -->
+        <text x="110" y="40" font-family="Arial Black, Impact, sans-serif" font-size="20" font-weight="900" fill="#1e293b" letter-spacing="0.5">SMART INDIA</text>
+        <text x="110" y="68" font-family="Arial Black, Impact, sans-serif" font-size="20" font-weight="900" fill="#1e293b" letter-spacing="0.5">HACKATHON</text>
+        <text x="110" y="98" font-family="Arial Black, Impact, sans-serif" font-size="22" font-weight="900" fill="#1e293b" letter-spacing="1">2026</text>
+      </g>
+    </defs>
+  </svg>
+
+  <!-- ========================================================================= -->
+  <!-- SLIDE 1: TITLE PAGE -->
+  <!-- ========================================================================= -->
+  <section class="slide-canvas">
+    <div class="flex-1 p-12 flex flex-col justify-between overflow-hidden relative">
+      <!-- Top Header -->
+      <div class="flex items-start justify-between relative z-10">
+        <div class="flex-1 text-center pl-36">
+          <h2 class="text-4xl font-bold text-[#1c5aa0] serif-title tracking-wide">SMART INDIA HACKATHON 2026</h2>
+          <h1 class="text-3xl font-black text-[#0f2240] serif-title tracking-wider mt-1.5">TITLE PAGE</h1>
+        </div>
+        <!-- SIH Logo Top-Right -->
+        <div class="w-60 h-20 flex-shrink-0">
+          <svg viewBox="0 0 320 125" class="w-full h-full">
+            <use href="#sih-logo-full" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Main Content Grid with Watermark -->
+      <div class="relative grid grid-cols-12 gap-8 items-center my-auto z-10">
+        <!-- Watermark Graphic in Background -->
+        <div class="absolute right-12 top-1/2 -translate-y-1/2 opacity-15 pointer-events-none z-0">
+          <svg viewBox="0 0 320 125" width="480" height="240">
+            <use href="#sih-logo-full" />
+          </svg>
+        </div>
+
+        <!-- Left Details (Matching Template Bullets - Larger Font) -->
+        <div class="col-span-8 space-y-4 pl-6 relative z-10">
+          <div class="text-[22px] leading-snug">
+            <span class="font-extrabold text-[#0f2240]">• Problem Statement ID – </span>
+            <span class="font-bold text-slate-800">SIH26012</span>
+          </div>
+          <div class="text-[22px] leading-snug">
+            <span class="font-extrabold text-[#0f2240]">• Problem Statement Title- </span>
+            <span class="font-bold text-slate-800">Automated Cadastral Feature Extraction & Urban Parcel Mapping System</span>
+          </div>
+          <div class="text-[22px] leading-snug">
+            <span class="font-extrabold text-[#0f2240]">• Theme- </span>
+            <span class="font-bold text-slate-800">Geospatial Technology / Smart Cities / Land Governance</span>
+          </div>
+          <div class="text-[22px] leading-snug">
+            <span class="font-extrabold text-[#0f2240]">• PS Category- </span>
+            <span class="font-bold text-slate-800">Software</span>
+          </div>
+          <div class="text-[22px] leading-snug">
+            <span class="font-extrabold text-[#0f2240]">• Team ID- </span>
+            <span class="font-bold text-slate-800">69110</span>
+          </div>
+          <div class="text-[22px] leading-snug">
+            <span class="font-extrabold text-[#0f2240]">• Team Name:- </span>
+            <span class="font-bold text-[#1c5aa0]">SkyGen</span>
+          </div>
+          <div class="text-[22px] leading-snug">
+            <span class="font-extrabold text-[#0f2240]">• College Name:- </span>
+            <span class="font-bold text-slate-800">[Your College / Institute Name Here]</span>
+          </div>
+        </div>
+
+        <!-- Right Preview Card -->
+        <div class="col-span-4 bg-white/95 border-2 border-slate-300 rounded-2xl p-6 shadow-md relative z-10 text-center">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 via-sky-500 to-teal-400 flex items-center justify-center text-white text-3xl shadow-md mx-auto mb-3">
+            🗺️
+          </div>
+          <h3 class="text-2xl font-black text-[#1c5aa0] tracking-tight serif-title">CadastreVision</h3>
+          <p class="text-xs font-bold text-slate-700 mt-1 mb-3">Sub-Meter Cadastral Parcel Extraction & Spatial Topology Audit</p>
+          <div class="w-full text-left space-y-2.5 text-xs text-slate-700 font-medium border-t border-slate-100 pt-3">
+            <div class="flex items-center gap-2"><span>🧠</span><span><strong>12.38M Parameter</strong> CadastreUNet Deep Learning</span></div>
+            <div class="flex items-center gap-2"><span>🌐</span><span><strong>0.25m GSD</strong> High-Resolution Aerial & Drone Imagery</span></div>
+            <div class="flex items-center gap-2"><span>📐</span><span><strong>Closed Parcels</strong> with Instant Land Area (m²)</span></div>
+            <div class="flex items-center gap-2"><span>⚖️</span><span><strong>ISO 19107</strong> Real-Time Topology Audit (0 Errors)</span></div>
+            <div class="flex items-center gap-2"><span>🚀</span><span><strong>94.43%</strong> Pixel Accuracy Production Benchmark</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom SIH Banner -->
+    <div class="w-full bg-[#0070c0] text-white text-center py-2.5 text-xs font-bold tracking-widest shadow-sm">
+      @SIH Idea submission- Template
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- SLIDE 2: IDEA TITLE -->
+  <!-- ========================================================================= -->
+  <section class="slide-canvas">
+    <div class="flex-1 p-10 flex flex-col justify-between overflow-hidden">
+      <!-- Header -->
+      <div class="flex items-center justify-between">
+        <div class="bg-white border-2 border-slate-400 rounded-full px-8 py-1.5 text-lg font-black text-[#0f2240] shadow-sm tracking-wide">
+          SkyGen
+        </div>
+        <h1 class="text-3xl font-black text-[#0f2240] serif-title tracking-wider">IDEA TITLE</h1>
+        <div class="w-56 h-16 flex-shrink-0">
+          <svg viewBox="0 0 320 125" class="w-full h-full">
+            <use href="#sih-logo-full" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="mt-1 mb-2">
+        <h2 class="text-lg font-black text-[#1c5aa0]">
+          CadastreVision — Automated Cadastral Feature Extraction & Urban Parcel Mapping System
+        </h2>
+      </div>
+
+      <!-- Main Content -->
+      <div class="grid grid-cols-12 gap-7 flex-1 items-start">
+        <!-- Left Column: Proposed Solution Bullets (Larger Font) -->
+        <div class="col-span-7 pr-2">
+          <h3 class="text-lg font-black text-[#1c5aa0] mb-1">• Proposed Solution :-</h3>
+          <p class="text-sm font-bold text-slate-800 mb-3 leading-snug">
+            A Smart Cadastral Parcel Extraction & Land Governance Ecosystem powered by Deep Learning + Geo-Topology + Cloud GIS
+          </p>
+          <div class="space-y-2.5 text-[13px] leading-relaxed text-slate-700">
+            <div>
+              <span class="font-extrabold text-[#0f2240]">• Centralized Cadastral Data Hub:-</span>
+              <span> Unified, secure cloud GIS platform to store, tile, and process high-res aerial/UAV imagery (0.25m GSD) and revenue cadastral records.</span>
+            </div>
+            <div>
+              <span class="font-extrabold text-[#0f2240]">• AI-Powered Boundary Extraction:-</span>
+              <span> Multi-task CadastreUNet (12.38M params) with dilated receptive fields detects property boundaries, boundary stones, and parcel interiors simultaneously.</span>
+            </div>
+            <div>
+              <span class="font-extrabold text-[#0f2240]">• Continuous Solid Cyan Delineation:-</span>
+              <span> 8-way directional affinity head & 1.8m endpoint snapping eliminate dotted/dashed artifacts, forming unbroken continuous boundary rings.</span>
+            </div>
+            <div>
+              <span class="font-extrabold text-[#0f2240]">• Automated Closed Parcel Polygonizer:-</span>
+              <span> Interior contour polygonization extracts residential/agricultural plots, calculating exact metric land area (m²) and perimeter.</span>
+            </div>
+            <div>
+              <span class="font-extrabold text-[#0f2240]">• ISO 19107 Topology Audit & Self-Healing:-</span>
+              <span> Automated snapping engine eliminates slivers, gaps, dangles, and overlaps, guaranteeing 0 topological errors under OGC standards.</span>
+            </div>
+            <div>
+              <span class="font-extrabold text-[#0f2240]">• Surveyor Review & CAD/GIS Export:-</span>
+              <span> Interactive WebGIS review desk for human-in-the-loop verification with 1-click export to GeoJSON, Shapefile, and DXF for SVAMITVA/Bhoomi.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Visual System Architecture Diagram (Larger Elements) -->
+        <div class="col-span-5 bg-slate-50 border-2 border-slate-300 rounded-2xl p-4 shadow-sm">
+          <div class="text-center font-black text-xs text-[#1c5aa0] tracking-wider mb-2">
+            CadastreVision – Automated Cadastral Management & Mapping Hub
+          </div>
+
+          <!-- Users Row -->
+          <div class="flex items-center justify-between gap-1 mb-1.5">
+            <span class="bg-[#1c5aa0] text-white text-[9.5px] font-bold px-2.5 py-1 rounded-full shadow-xs">Surveyors</span>
+            <span class="bg-[#1c5aa0] text-white text-[9.5px] font-bold px-2.5 py-1 rounded-full shadow-xs">Urban Planners</span>
+            <span class="bg-[#1c5aa0] text-white text-[9.5px] font-bold px-2.5 py-1 rounded-full shadow-xs">Revenue Dept</span>
+            <span class="bg-[#1c5aa0] text-white text-[9.5px] font-bold px-2.5 py-1 rounded-full shadow-xs">Landowners</span>
+          </div>
+
+          <div class="text-center mb-2">
+            <span class="bg-sky-500 text-white text-[9.5px] font-black px-5 py-0.5 rounded-full uppercase tracking-wider shadow-xs">USERS</span>
+          </div>
+
+          <!-- Middle Split: UI Layer vs Backend Services -->
+          <div class="grid grid-cols-2 gap-2.5 mb-2">
+            <!-- UI Layer -->
+            <div class="bg-white border-2 border-amber-400 rounded-xl p-2 shadow-xs">
+              <div class="bg-amber-500 text-white text-[9.5px] font-black text-center py-1 rounded mb-1.5 shadow-xs">
+                UI Layer (Web & Desktop GIS)
+              </div>
+              <div class="space-y-1 text-[9px]">
+                <div class="bg-sky-700 text-white text-center py-1 rounded shadow-xs font-semibold">Cadastral WebGIS Portal</div>
+                <div class="bg-sky-700 text-white text-center py-1 rounded shadow-xs font-semibold">Split-Screen Comparison Map</div>
+                <div class="bg-sky-700 text-white text-center py-1 rounded shadow-xs font-semibold">Vector Boundary Editor & Snap</div>
+                <div class="bg-sky-700 text-white text-center py-1 rounded shadow-xs font-semibold">Surveyor Approval Desk</div>
+                <div class="bg-sky-700 text-white text-center py-1 rounded shadow-xs font-semibold">GeoJSON / Shapefile Export</div>
+              </div>
+            </div>
+
+            <!-- Backend Services -->
+            <div class="bg-white border-2 border-rose-400 rounded-xl p-2 shadow-xs">
+              <div class="bg-rose-600 text-white text-[9.5px] font-black text-center py-1 rounded mb-1.5 shadow-xs">
+                Backend Services (FastAPI)
+              </div>
+              <div class="space-y-1 text-[9px]">
+                <div class="bg-sky-800 text-white text-center py-1 rounded shadow-xs font-semibold">Orthoimagery Tiling Service</div>
+                <div class="bg-sky-800 text-white text-center py-1 rounded shadow-xs font-semibold">Vectorization & Contour Engine</div>
+                <div class="bg-sky-800 text-white text-center py-1 rounded shadow-xs font-semibold">LADM Attribute Generator</div>
+                <div class="bg-sky-800 text-white text-center py-1 rounded shadow-xs font-semibold">Spatial Query & Bounding Box</div>
+                <div class="bg-sky-800 text-white text-center py-1 rounded shadow-xs font-semibold">Auth & Audit Logging Service</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI & Analytics Service Card -->
+          <div class="bg-white border-2 border-yellow-400 rounded-xl p-2 mb-2 shadow-xs">
+            <div class="bg-amber-400 text-slate-900 text-[9.5px] font-black text-center py-1 rounded mb-1.5 shadow-xs">
+              AI / Spatial Analytics Service
+            </div>
+            <div class="grid grid-cols-2 gap-1.5 text-[9px]">
+              <div class="bg-[#1c5aa0] text-white text-center py-1 rounded shadow-xs font-semibold">CadastreUNet (12.38M)</div>
+              <div class="bg-[#1c5aa0] text-white text-center py-1 rounded shadow-xs font-semibold">Multi-Scale Dilated Head</div>
+              <div class="bg-[#1c5aa0] text-white text-center py-1 rounded shadow-xs font-semibold">8-Way Affinity Engine</div>
+              <div class="bg-[#1c5aa0] text-white text-center py-1 rounded shadow-xs font-semibold">ISO 19107 Topology Audit</div>
+            </div>
+          </div>
+
+          <!-- Storage Card -->
+          <div class="bg-[#0f2240] text-white text-center py-1.5 rounded-lg text-[9.5px] font-bold shadow-xs">
+            Spatial Database & Cloud Storage (PostGIS / Cloud GeoTIFF / Redis)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom SIH Banner -->
+    <div class="w-full bg-[#0070c0] text-white text-center py-2.5 text-xs font-bold tracking-widest shadow-sm">
+      @SIH Idea submission- Template
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- SLIDE 3: TECHNICAL APPROACH -->
+  <!-- ========================================================================= -->
+  <section class="slide-canvas">
+    <div class="flex-1 p-10 flex flex-col justify-between overflow-hidden">
+      <!-- Header -->
+      <div class="flex items-center justify-between">
+        <div class="bg-white border-2 border-slate-400 rounded-full px-8 py-1.5 text-lg font-black text-[#0f2240] shadow-sm tracking-wide">
+          SkyGen
+        </div>
+        <h1 class="text-3xl font-black text-[#0f2240] serif-title tracking-wider">TECHNICAL APPROACH</h1>
+        <div class="w-56 h-16 flex-shrink-0">
+          <svg viewBox="0 0 320 125" class="w-full h-full">
+            <use href="#sih-logo-full" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Main Content (Larger Fonts) -->
+      <div class="grid grid-cols-12 gap-7 flex-1 items-start mt-2">
+        <!-- Left Column: Tech Stack, 5 Process Flow Cards, Process Flow Text -->
+        <div class="col-span-7 space-y-3.5">
+          <div>
+            <h3 class="text-base font-black text-[#1c5aa0] mb-1">• Technologies to be Used:-</h3>
+            <div class="space-y-1 text-[13px] text-slate-700 leading-snug">
+              <div><span class="font-extrabold text-[#0f2240]">• Frontend:-</span> React.js + Next.js (Web), MapLibre GL, TailwindCSS (UI)</div>
+              <div><span class="font-extrabold text-[#0f2240]">• Backend:-</span> Python 3.10, FastAPI, Celery, GDAL / OGR (microservices)</div>
+              <div><span class="font-extrabold text-[#0f2240]">• Databases:-</span> PostgreSQL / PostGIS, Redis, MinIO / S3</div>
+              <div><span class="font-extrabold text-[#0f2240]">• AI/ML:-</span> PyTorch, Torchvision, Scikit-learn, OpenCV</div>
+              <div><span class="font-extrabold text-[#0f2240]">• GIS & Geometry:-</span> GeoPandas, Shapely 2.0+, PyProj, Rasterio, NetworkX</div>
+              <div><span class="font-extrabold text-[#0f2240]">• Cloud/Infra:-</span> AWS / GCP, Docker, Kubernetes, GitHub Actions (CI/CD)</div>
+              <div><span class="font-extrabold text-[#0f2240]">• Integrations:-</span> SVAMITVA, Bhoomi, Bhuvan / ISRO API, OGC WMS/WFS</div>
+            </div>
+          </div>
+
+          <!-- 5 Colored Process Flow Icon Cards (Larger, High Contrast) -->
+          <div class="grid grid-cols-5 gap-2.5 pt-1">
+            <div class="bg-blue-600 text-white rounded-xl p-3 text-center shadow-sm flex flex-col items-center justify-center">
+              <span class="text-2xl mb-1">📄</span>
+              <span class="text-[10.5px] font-bold leading-tight">Requirement<br>Gathering</span>
+            </div>
+            <div class="bg-emerald-600 text-white rounded-xl p-3 text-center shadow-sm flex flex-col items-center justify-center">
+              <span class="text-2xl mb-1">🎨</span>
+              <span class="text-[10.5px] font-bold leading-tight">UI Prototyping<br>(Figma)</span>
+            </div>
+            <div class="bg-indigo-600 text-white rounded-xl p-3 text-center shadow-sm flex flex-col items-center justify-center">
+              <span class="text-2xl mb-1">&lt;/&gt;</span>
+              <span class="text-[10.5px] font-bold leading-tight">Core Dev<br>(MVP)</span>
+            </div>
+            <div class="bg-amber-600 text-white rounded-xl p-3 text-center shadow-sm flex flex-col items-center justify-center">
+              <span class="text-2xl mb-1">🧠</span>
+              <span class="text-[10.5px] font-bold leading-tight">AI & Topology<br>Integration</span>
+            </div>
+            <div class="bg-cyan-600 text-white rounded-xl p-3 text-center shadow-sm flex flex-col items-center justify-center">
+              <span class="text-2xl mb-1">☁️</span>
+              <span class="text-[10.5px] font-bold leading-tight">Feedback &<br>Scaling</span>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-black text-[#1c5aa0] mb-0.5">• Process Flow :-</h3>
+            <p class="text-[12px] font-semibold text-slate-700 leading-relaxed">
+              Requirement Gathering → UI Prototyping (Figma) → Core Development (MVP) → AI & Topology Integration → Testing → Cloud Deployment → Feedback & Scaling
+            </p>
+          </div>
+        </div>
+
+        <!-- Right Column: Tech Badges Grid & Red Outline Demo Box -->
+        <div class="col-span-5 space-y-3.5">
+          <!-- Tech Badges Card -->
+          <div class="bg-slate-50 border-2 border-slate-300 rounded-2xl p-4 shadow-sm space-y-2">
+            <div class="grid grid-cols-2 gap-3 text-[11.5px]">
+              <div>
+                <span class="font-bold text-slate-500 uppercase tracking-wider block text-[10px]">FRONTEND</span>
+                <div class="font-bold text-slate-800">React.js, Next.js, Leaflet, Tailwind</div>
+              </div>
+              <div>
+                <span class="font-bold text-slate-500 uppercase tracking-wider block text-[10px]">BACKEND</span>
+                <div class="font-bold text-slate-800">Python, FastAPI, Celery, GDAL</div>
+              </div>
+              <div>
+                <span class="font-bold text-slate-500 uppercase tracking-wider block text-[10px]">DATABASES</span>
+                <div class="font-bold text-slate-800">PostgreSQL, PostGIS, Redis</div>
+              </div>
+              <div>
+                <span class="font-bold text-slate-500 uppercase tracking-wider block text-[10px]">AI / ML</span>
+                <div class="font-bold text-slate-800">PyTorch, Torchvision, OpenCV</div>
+              </div>
+              <div>
+                <span class="font-bold text-slate-500 uppercase tracking-wider block text-[10px]">GIS & GEOMETRY</span>
+                <div class="font-bold text-slate-800">GeoPandas, Shapely 2.0, Rasterio</div>
+              </div>
+              <div>
+                <span class="font-bold text-slate-500 uppercase tracking-wider block text-[10px]">CLOUD / INFRA</span>
+                <div class="font-bold text-slate-800">AWS / GCP, Docker, Kubernetes</div>
+              </div>
+            </div>
+            <div class="border-t border-slate-200 pt-2 text-[11.5px]">
+              <span class="font-bold text-slate-500 uppercase tracking-wider block text-[10px]">INTEGRATIONS</span>
+              <div class="font-bold text-slate-800">SVAMITVA, Bhoomi, Bhuvan ISRO, OGC WMS/WFS</div>
+            </div>
+          </div>
+
+          <!-- Red Outline Demo Links Box (Updated for SkyGen) -->
+          <div class="border-2 border-rose-500 bg-rose-50/50 rounded-xl p-3 shadow-sm">
+            <h4 class="text-sm font-black text-rose-900 mb-1">• Project Links Demo:-</h4>
+            <div class="text-[12px] space-y-1">
+              <div><span class="font-bold text-slate-800">• Github:</span> <a href="https://github.com/SkyGen/CadastreVision" class="text-blue-600 underline font-mono text-[11px]">https://github.com/SkyGen/CadastreVision</a></div>
+              <div><span class="font-bold text-slate-800">• Demo Live Prototype:</span> <a href="https://cadastre.skygen.site" class="text-blue-600 underline font-mono text-[11px]">https://cadastre.skygen.site</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom SIH Banner with Page Number -->
+    <div class="w-full bg-[#0070c0] text-white flex items-center justify-between px-10 py-2.5 text-xs font-bold tracking-widest shadow-sm">
+      <span class="flex-1 text-center">@SIH Idea submission- Template</span>
+      <span class="font-extrabold text-sm">3</span>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- SLIDE 4: FEASIBILITY AND VIABILITY -->
+  <!-- ========================================================================= -->
+  <section class="slide-canvas">
+    <div class="flex-1 p-10 flex flex-col justify-between overflow-hidden">
+      <!-- Header -->
+      <div class="flex items-center justify-between">
+        <div class="bg-white border-2 border-slate-400 rounded-full px-8 py-1.5 text-lg font-black text-[#0f2240] shadow-sm tracking-wide">
+          SkyGen
+        </div>
+        <h1 class="text-3xl font-black text-[#0f2240] serif-title tracking-wider">FEASIBILITY AND VIABILITY</h1>
+        <div class="w-56 h-16 flex-shrink-0">
+          <svg viewBox="0 0 320 125" class="w-full h-full">
+            <use href="#sih-logo-full" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Main Content: Balanced Two Columns (Larger Fonts) -->
+      <div class="grid grid-cols-12 gap-7 flex-1 items-start mt-2">
+        <!-- Left Column: Feasibility, Challenges, Mitigation, Viability -->
+        <div class="col-span-6 space-y-2.5 text-[12px]">
+          <div>
+            <h3 class="font-black text-[#1c5aa0] text-sm mb-0.5">Feasibility :-</h3>
+            <div class="space-y-0.5 text-slate-700 leading-snug">
+              <div><span class="font-bold text-[#0f2240]">• Technical:</span> Uses proven AI/Geo-Topology/Cloud tech → scalable & validated</div>
+              <div><span class="font-bold text-[#0f2240]">• Economic:</span> Open-source stack → low cost, sustainable via government subscriptions</div>
+              <div><span class="font-bold text-[#0f2240]">• Operational:</span> Simple UI, role-based access, inclusive (web + field laptop)</div>
+              <div><span class="font-bold text-[#0f2240]">• Social:</span> Strengthens land tenure security, prevents land grabbing</div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="font-black text-[#1c5aa0] text-sm mb-0.5">Potential Challenges:-</h3>
+            <div class="space-y-0.5 text-slate-700 leading-snug">
+              <div>• Low contrast between adjoining rural farm boundaries and dirt tracks</div>
+              <div>• High compute requirements for giga-pixel orthoimagery mosaics</div>
+              <div>• Boundary disputes & hesitation to shift from traditional manual survey</div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="font-black text-[#1c5aa0] text-sm mb-0.5">Mitigation Strategies:-</h3>
+            <div class="space-y-0.5 text-slate-700 leading-snug">
+              <div>• Multi-scale dilated convolutions (PMG) & adaptive edge thresholding</div>
+              <div>• Sliding-window 512×512 tiling with overlapping blending buffers</div>
+              <div>• Human-in-the-loop surveyor review desk with topological auto-snap</div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="font-black text-[#1c5aa0] text-sm mb-0.5">Viability:-</h3>
+            <div class="space-y-0.5 text-slate-700 leading-snug">
+              <div>• Technically feasible with modular FastAPI + Celery architecture</div>
+              <div>• Economically sustainable via Gov-Cloud / State Revenue SaaS deployment</div>
+              <div>• Socially impactful → formalizes property rights for millions</div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="font-black text-[#1c5aa0] text-sm mb-0.5">Business Potential:-</h3>
+            <div class="space-y-0.5 text-slate-700 leading-snug">
+              <div>• SVAMITVA village property card generation (6.6 lakh villages)</div>
+              <div>• Municipal property tax boundary assessment & unassessed land audits</div>
+              <div>• Infrastructure right-of-way corridor planning (NHAI, Railways)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Use Cases, Challenges & Solutions, Gold Highlight Box -->
+        <div class="col-span-6 space-y-2.5 text-[12px]">
+          <div>
+            <h3 class="font-black text-[#1c5aa0] text-sm mb-0.5">Use Cases:-</h3>
+            <div class="space-y-0.5 text-slate-700 leading-snug">
+              <div>• SVAMITVA village property card generation & rural parcel demarcation</div>
+              <div>• Municipal property tax boundary assessment & unassessed structure audits</div>
+              <div>• Infrastructure corridor planning (highways, railways, transmission lines)</div>
+              <div>• Rapid post-disaster land parcel damage & encroachment monitoring</div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="font-black text-[#1c5aa0] text-sm mb-0.5">Challenges:-</h3>
+            <div class="space-y-0.5 text-slate-700 leading-snug">
+              <div>• Boundary adoption & trust (hesitation to shift from manual DGPS)</div>
+              <div>• Topological consistency across tile boundaries (overlapping polygons)</div>
+              <div>• Scalability with millions of land parcel records</div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="font-black text-[#1c5aa0] text-sm mb-0.5">Solutions:-</h3>
+            <div class="space-y-0.5 text-slate-700 leading-snug">
+              <div>• Transparent side-by-side visual verification on WebGIS portal</div>
+              <div>• Automated ISO 19107 topology validation engine with self-healing</div>
+              <div>• Cloud-native tile streaming with PostGIS spatial indexing & Redis caching</div>
+            </div>
+          </div>
+
+          <!-- Gold Highlight Box (Larger text) -->
+          <div class="bg-amber-50 border-2 border-amber-400 rounded-xl p-3 shadow-sm mt-2">
+            <div class="text-center font-extrabold text-xs text-amber-900 tracking-wide mb-1.5 uppercase">
+              SUPPORTING FACTS FOR FEASIBILITY AND VIABILITY
+            </div>
+            <div class="space-y-1 text-[11.5px] text-amber-900 leading-snug">
+              <div>• <strong>Land disputes account for >65% of all civil litigation</strong> in India (NITI Aayog / Land Conflict Watch).</div>
+              <div>• <strong>94.43% pixel accuracy</strong> achieved by CadastreUNet on 0.25m test orthoimagery.</div>
+              <div>• <strong>100% topologically valid geometries</strong> (0 self-intersections, 0 gaps) verified by ISO 19107 audit.</div>
+              <div>• <strong>>75% reduction in manual survey drafting time</strong> compared to manual CAD/GIS tracing.</div>
+              <div>• <strong>Cloud-native deployment reduces infrastructure costs by >80%</strong> vs traditional proprietary GIS servers.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom SIH Banner with Page Number -->
+    <div class="w-full bg-[#0070c0] text-white flex items-center justify-between px-10 py-2.5 text-xs font-bold tracking-widest shadow-sm">
+      <span class="flex-1 text-center">@SIH Idea submission- Template</span>
+      <span class="font-extrabold text-sm">4</span>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- SLIDE 5: IMPACT AND BENEFITS -->
+  <!-- ========================================================================= -->
+  <section class="slide-canvas">
+    <div class="flex-1 p-10 flex flex-col justify-between overflow-hidden">
+      <!-- Header -->
+      <div class="flex items-center justify-between">
+        <div class="bg-white border-2 border-slate-400 rounded-full px-8 py-1.5 text-lg font-black text-[#0f2240] shadow-sm tracking-wide">
+          SkyGen
+        </div>
+        <h1 class="text-3xl font-black text-[#0f2240] serif-title tracking-wider">IMPACT AND BENEFITS</h1>
+        <div class="w-56 h-16 flex-shrink-0">
+          <svg viewBox="0 0 320 125" class="w-full h-full">
+            <use href="#sih-logo-full" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Top Half: Target Audience Impact & Unique Outcomes (Larger Fonts) -->
+      <div class="grid grid-cols-12 gap-7 items-start mt-2">
+        <!-- Left Column -->
+        <div class="col-span-6 space-y-2 text-[12px]">
+          <div>
+            <h3 class="font-black text-[#1c5aa0] text-sm mb-1">• Potential impact on the target audience:-</h3>
+            <div class="space-y-0.5 text-slate-700 leading-snug">
+              <div><span class="font-bold text-[#0f2240]">• Revenue Surveyors:</span> 10x faster survey turnaround; automated drafting eliminates errors.</div>
+              <div><span class="font-bold text-[#0f2240]">• Landowners & Citizens:</span> Indisputable digital property cards; prevents land grabbing.</div>
+              <div><span class="font-bold text-[#0f2240]">• Urban Local Bodies (ULBs):</span> 100% property tax coverage; unmasks unassessed parcels.</div>
+              <div><span class="font-bold text-[#0f2240]">• Judiciary & Administration:</span> Drastic reduction in land litigation; objective ground truth.</div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="font-black text-[#1c5aa0] text-sm mb-1">• Key Cadastral & Land Governance Insights</h3>
+            <div class="space-y-0.5 text-slate-700 leading-snug">
+              <div>• 6.6 lakh Indian villages covered under SVAMITVA drone mapping mission.</div>
+              <div>• Over ₹50,000 Cr locked in Indian land disputes due to inaccurate paper maps.</div>
+              <div>• 70%+ revenue officials cite manual tracing as the biggest modernization bottleneck.</div>
+              <div>• 0.25m GSD drone imagery provides sub-meter ground truth needed for legal delineation.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-span-6 space-y-2 text-[12px]">
+          <div>
+            <h3 class="font-black text-[#1c5aa0] text-sm mb-1">• Unique Outcomes from Our Solution</h3>
+            <div class="space-y-1 text-slate-700 leading-relaxed">
+              <div><span class="font-bold text-[#0f2240]">• Turnaround Speed Increase:</span> Turnaround time cut from weeks to &lt;150 ms per patch; full 10 km² mapped in &lt;15 mins.</div>
+              <div><span class="font-bold text-[#0f2240]">• Topological Integrity:</span> Guarantees closed, valid polygons with clean boundary adjacency and zero overlapping parcels.</div>
+              <div><span class="font-bold text-[#0f2240]">• Surveyor Adoption & Satisfaction:</span> Expect >85% satisfaction for surveyors via intuitive browser WebGIS split-screen review portal.</div>
+              <div><span class="font-bold text-[#0f2240]">• Institutional Credibility:</span> ISO 19107 compliant geometries create legally defensible digital land records for courts and banks.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Half: 3-Row Benefits Table (Larger Text & Spacing) -->
+      <div class="mt-2">
+        <h3 class="font-black text-[#1c5aa0] text-sm mb-1.5">• Benefits of the Solution (Social, Economic, Environmental)</h3>
+        <table class="w-full text-[11.5px] border border-slate-300 rounded-xl overflow-hidden shadow-sm">
+          <thead class="bg-[#0f2240] text-white font-bold">
+            <tr>
+              <th class="py-2 px-3.5 text-left w-28">Type</th>
+              <th class="py-2 px-3.5 text-left w-80">Benefit</th>
+              <th class="py-2 px-3.5 text-left">Supporting Example / Measurable Impact</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200">
+            <tr class="bg-slate-50">
+              <td class="py-2 px-3.5 font-bold text-blue-700">Social</td>
+              <td class="py-2 px-3.5 text-slate-800">Enhanced land tenure security & dispute prevention<br>Empowers rural landowners with formal credit collateral</td>
+              <td class="py-2 px-3.5 text-slate-600">Reduces land dispute litigation risk (>65% of civil cases); empowers rural citizens with verified digital property cards under SVAMITVA.</td>
+            </tr>
+            <tr class="bg-white">
+              <td class="py-2 px-3.5 font-bold text-blue-700">Economic</td>
+              <td class="py-2 px-3.5 text-slate-800">Massive survey cost savings & municipal revenue uplift<br>Enables ULBs to broaden property tax collection base</td>
+              <td class="py-2 px-3.5 text-slate-600">Automating boundary extraction saves >80% manual drafting costs; identifies unassessed built structures for property tax assessment.</td>
+            </tr>
+            <tr class="bg-slate-50">
+              <td class="py-2 px-3.5 font-bold text-blue-700">Environmental</td>
+              <td class="py-2 px-3.5 text-slate-800">Precision eco-sensitive boundary & encroachment monitoring<br>Optimizes sustainable land use and corridor planning</td>
+              <td class="py-2 px-3.5 text-slate-600">Enables automated tracking of forest fringes, wetlands, and public commons encroachment without physical survey intrusion.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Bottom SIH Banner with Page Number -->
+    <div class="w-full bg-[#0070c0] text-white flex items-center justify-between px-10 py-2.5 text-xs font-bold tracking-widest shadow-sm">
+      <span class="flex-1 text-center">@SIH Idea submission- Template</span>
+      <span class="font-extrabold text-sm">5</span>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- SLIDE 6: RESEARCH AND REFERENCES -->
+  <!-- ========================================================================= -->
+  <section class="slide-canvas">
+    <div class="flex-1 p-10 flex flex-col justify-between overflow-hidden">
+      <!-- Header -->
+      <div class="flex items-center justify-between">
+        <div class="bg-white border-2 border-slate-400 rounded-full px-8 py-1.5 text-lg font-black text-[#0f2240] shadow-sm tracking-wide">
+          SkyGen
+        </div>
+        <h1 class="text-3xl font-black text-[#0f2240] serif-title tracking-wider">RESEARCH AND REFERENCES</h1>
+        <div class="w-56 h-16 flex-shrink-0">
+          <svg viewBox="0 0 320 125" class="w-full h-full">
+            <use href="#sih-logo-full" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Main Content: Papers/Standards vs Feature Matrix (Larger Fonts) -->
+      <div class="grid grid-cols-12 gap-7 items-start mt-2">
+        <!-- Left Column: Papers & Standards & Links Box -->
+        <div class="col-span-6 space-y-2.5 text-[11.5px]">
+          <div>
+            <h3 class="font-black text-[#1c5aa0] text-sm mb-1">• Research Papers:</h3>
+            <div class="space-y-1 text-slate-700 leading-snug">
+              <div>a. Ronneberger, O., et al., "U-Net: Convolutional Networks for Biomedical Image Segmentation", <em>MICCAI</em>.</div>
+              <div>b. Crommelinck, S., Bennett, R., et al., "Large-scale Cadastral Mapping using UAV Imagery: A Review", <em>ISPRS IJGI</em>.</div>
+              <div>c. Zhou, K., Yang, Y., et al., "Domain Generalization with MixStyle", <em>ICLR 2021</em>.</div>
+              <div>d. Xia, G. S., et al., "DOTA: A Large-scale Dataset for Object Detection in Aerial Images", <em>IEEE TPAMI</em>.</div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="font-black text-[#1c5aa0] text-sm mb-1">• Cadastral Standards & Benchmarks:</h3>
+            <div class="space-y-1 text-slate-700 leading-snug">
+              <div>a. Survey of India (SoI) & SVAMITVA Guidelines: <em>Guidelines for Drone Survey for Cadastral Mapping</em>.</div>
+              <div>b. ISO 19152:2012: <em>Land Administration Domain Model (LADM)</em>.</div>
+              <div>c. ISO 19107:2019: <em>Geographic information — Spatial schema</em>.</div>
+            </div>
+          </div>
+
+          <!-- Project Links Box (Red Outline) -->
+          <div class="border-2 border-rose-500 bg-rose-50/50 rounded-xl p-3 shadow-sm">
+            <h4 class="text-sm font-black text-rose-900 mb-1">• Project Links Demo:-</h4>
+            <div class="text-[12px] space-y-1">
+              <div><span class="font-bold text-slate-800">• Github:</span> <a href="https://github.com/SkyGen/CadastreVision" class="text-blue-600 underline font-mono text-[11px]">https://github.com/SkyGen/CadastreVision</a></div>
+              <div><span class="font-bold text-slate-800">• Demo Live Prototype:</span> <a href="https://cadastre.skygen.site" class="text-blue-600 underline font-mono text-[11px]">https://cadastre.skygen.site</a></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: 8-Row Feature Comparison Matrix -->
+        <div class="col-span-6">
+          <table class="w-full text-[10.5px] border border-slate-300 rounded-xl overflow-hidden shadow-sm">
+            <thead class="bg-[#0f2240] text-white font-bold">
+              <tr>
+                <th class="py-2 px-2.5 text-left">Feature / Capability</th>
+                <th class="py-2 px-1 text-center bg-blue-700 text-white">Our Platform</th>
+                <th class="py-2 px-1 text-center">Manual DGPS</th>
+                <th class="py-2 px-1 text-center">Generic SegNet</th>
+                <th class="py-2 px-1 text-center">ArcGIS Pro</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <tr class="bg-slate-50"><td class="py-1 px-2.5 font-bold text-slate-800">1. Sub-Meter Boundary Extraction</td><td class="text-center font-bold text-emerald-600 text-sm">✔</td><td class="text-center text-emerald-600 text-sm">✔</td><td class="text-center text-red-500 text-sm">✖</td><td class="text-center text-amber-500 text-sm">⚠</td></tr>
+              <tr class="bg-white"><td class="py-1 px-2.5 font-bold text-slate-800">2. Continuous Solid Lines (No Dots)</td><td class="text-center font-bold text-emerald-600 text-sm">✔</td><td class="text-center text-emerald-600 text-sm">✔</td><td class="text-center text-red-500 text-sm">✖</td><td class="text-center text-red-500 text-sm">✖</td></tr>
+              <tr class="bg-slate-50"><td class="py-1 px-2.5 font-bold text-slate-800">3. Closed Parcel Formation & Area (m²)</td><td class="text-center font-bold text-emerald-600 text-sm">✔</td><td class="text-center text-emerald-600 text-sm">✔</td><td class="text-center text-red-500 text-sm">✖</td><td class="text-center text-amber-500 text-sm">⚠</td></tr>
+              <tr class="bg-white"><td class="py-1 px-2.5 font-bold text-slate-800">4. ISO 19107 Topology Validation Engine</td><td class="text-center font-bold text-emerald-600 text-sm">✔</td><td class="text-center text-amber-500 text-sm">⚠</td><td class="text-center text-red-500 text-sm">✖</td><td class="text-center text-amber-500 text-sm">⚠</td></tr>
+              <tr class="bg-slate-50"><td class="py-1 px-2.5 font-bold text-slate-800">5. Automated Self-Healing (Sliver Snap)</td><td class="text-center font-bold text-emerald-600 text-sm">✔</td><td class="text-center text-red-500 text-sm">✖</td><td class="text-center text-red-500 text-sm">✖</td><td class="text-center text-red-500 text-sm">✖</td></tr>
+              <tr class="bg-white"><td class="py-1 px-2.5 font-bold text-slate-800">6. Sub-Meter Resolution (0.25m GSD)</td><td class="text-center font-bold text-emerald-600 text-sm">✔</td><td class="text-center text-emerald-600 text-sm">✔</td><td class="text-center text-red-500 text-sm">✖</td><td class="text-center text-emerald-600 text-sm">✔</td></tr>
+              <tr class="bg-slate-50"><td class="py-1 px-2.5 font-bold text-slate-800">7. Zero-Install WebGIS Review Desk</td><td class="text-center font-bold text-emerald-600 text-sm">✔</td><td class="text-center text-red-500 text-sm">✖</td><td class="text-center text-red-500 text-sm">✖</td><td class="text-center text-red-500 text-sm">✖</td></tr>
+              <tr class="bg-white"><td class="py-1 px-2.5 font-bold text-slate-800">8. Zero Proprietary License Dependency</td><td class="text-center font-bold text-emerald-600 text-sm">✔</td><td class="text-center text-red-500 text-sm">✖</td><td class="text-center text-emerald-600 text-sm">✔</td><td class="text-center text-red-500 text-sm">✖</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Bottom: 8-Stage Research Chevron Pipeline (Larger text & badges) -->
+      <div class="mt-2">
+        <h3 class="font-black text-[#1c5aa0] text-sm mb-1">• Research Flow:</h3>
+        <div class="grid grid-cols-8 gap-2 text-center text-white font-bold text-[10px]">
+          <div class="bg-blue-800 py-2.5 px-1 rounded-xl flex items-center justify-center shadow-xs">Problem<br>Identification</div>
+          <div class="bg-blue-800 py-2.5 px-1 rounded-xl flex items-center justify-center shadow-xs">Literature &<br>Standards</div>
+          <div class="bg-blue-800 py-2.5 px-1 rounded-xl flex items-center justify-center shadow-xs">Gap<br>Analysis</div>
+          <div class="bg-blue-800 py-2.5 px-1 rounded-xl flex items-center justify-center shadow-xs">CadastreUNet<br>Architecture</div>
+          <div class="bg-blue-800 py-2.5 px-1 rounded-xl flex items-center justify-center shadow-xs">Topology<br>Validation</div>
+          <div class="bg-blue-800 py-2.5 px-1 rounded-xl flex items-center justify-center shadow-xs">Proposed<br>Solution Design</div>
+          <div class="bg-blue-800 py-2.5 px-1 rounded-xl flex items-center justify-center shadow-xs">Experimental<br>Outcome</div>
+          <div class="bg-teal-700 py-2.5 px-1 rounded-xl flex items-center justify-center shadow-xs">CadastreVision<br>Platform</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom SIH Banner with Page Number -->
+    <div class="w-full bg-[#0070c0] text-white flex items-center justify-between px-10 py-2.5 text-xs font-bold tracking-widest shadow-sm">
+      <span class="flex-1 text-center">@SIH Idea submission- Template</span>
+      <span class="font-extrabold text-sm">6</span>
+    </div>
+  </section>
+
+</body>
+</html>

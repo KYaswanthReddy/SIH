@@ -1,0 +1,25 @@
+{
+  "precision": 0.0262,
+  "recall": 0.1299,
+  "f1": 0.0436,
+  "dice": 0.0436,
+  "iou": 0.0223,
+  "accuracy": 0.8845,
+  "optimal_threshold": 0.5,
+  "optimal_f1": 0.0436,
+  "total_samples": 100,
+  "threshold_sweep": {
+    "th_0.50": {
+      "precision": 0.0262,
+      "recall": 0.1299,
+      "f1": 0.0436,
+      "dice": 0.0436,
+      "iou": 0.0223,
+      "accuracy": 0.8845,
+      "tp": 17250,
+      "fp": 641243,
+      "fn": 115536,
+      "tn": 5779571
+    }
+  }
+}

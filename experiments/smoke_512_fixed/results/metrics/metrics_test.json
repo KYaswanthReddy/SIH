@@ -1,0 +1,67 @@
+{
+  "precision": 0.0214,
+  "recall": 1.0,
+  "f1": 0.0418,
+  "dice": 0.0418,
+  "iou": 0.0214,
+  "accuracy": 0.0214,
+  "tp": 89575,
+  "fp": 4104729,
+  "fn": 0,
+  "tn": 0,
+  "optimal_threshold": 0.2,
+  "optimal_f1": 0.0418,
+  "total_samples": 16,
+  "threshold_sweep": {
+    "th_0.20": {
+      "precision": 0.0214,
+      "recall": 1.0,
+      "f1": 0.0418,
+      "dice": 0.0418,
+      "iou": 0.0214,
+      "accuracy": 0.0214,
+      "tp": 89575,
+      "fp": 4104729,
+      "fn": 0,
+      "tn": 0
+    },
+    "th_0.30": {
+      "precision": 0.0214,
+      "recall": 1.0,
+      "f1": 0.0418,
+      "dice": 0.0418,
+      "iou": 0.0214,
+      "accuracy": 0.0214,
+      "tp": 89575,
+      "fp": 4104729,
+      "fn": 0,
+      "tn": 0
+    },
+    "th_0.40": {
+      "precision": 0.0214,
+      "recall": 1.0,
+      "f1": 0.0418,
+      "dice": 0.0418,
+      "iou": 0.0214,
+      "accuracy": 0.0214,
+      "tp": 89575,
+      "fp": 4104729,
+      "fn": 0,
+      "tn": 0
+    },
+    "th_0.50": {
+      "precision": 0.0214,
+      "recall": 1.0,
+      "f1": 0.0418,
+      "dice": 0.0418,
+      "iou": 0.0214,
+      "accuracy": 0.0214,
+      "tp": 89573,
+      "fp": 4104715,
+      "fn": 2,
+      "tn": 14
+    }
+  },
+  "selected_validation_threshold": 0.2,
+  "selected_from_validation": true
+}

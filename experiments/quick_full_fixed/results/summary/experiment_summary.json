@@ -1,0 +1,205 @@
+{
+  "experiment_name": "quick_full_fixed_cadastre_network",
+  "status": "COMPLETED",
+  "total_epochs_trained": 10,
+  "best_epoch": 8,
+  "selected_validation_threshold": 0.5,
+  "best_val_metrics": {
+    "precision": 0.0635,
+    "recall": 0.3876,
+    "f1": 0.1091,
+    "dice": 0.1091,
+    "iou": 0.0577,
+    "accuracy": 0.8717,
+    "tp": 51471,
+    "fp": 759275,
+    "fn": 81315,
+    "tn": 5661539,
+    "optimal_threshold": 0.5,
+    "optimal_f1": 0.1091,
+    "total_samples": 100,
+    "threshold_sweep": {
+      "th_0.20": {
+        "precision": 0.031,
+        "recall": 0.8466,
+        "f1": 0.0599,
+        "dice": 0.0599,
+        "iou": 0.0309,
+        "accuracy": 0.4613,
+        "tp": 112416,
+        "fp": 3510020,
+        "fn": 20370,
+        "tn": 2910794
+      },
+      "th_0.30": {
+        "precision": 0.0399,
+        "recall": 0.7252,
+        "f1": 0.0757,
+        "dice": 0.0757,
+        "iou": 0.0393,
+        "accuracy": 0.6411,
+        "tp": 96294,
+        "fp": 2315472,
+        "fn": 36492,
+        "tn": 4105342
+      },
+      "th_0.40": {
+        "precision": 0.0497,
+        "recall": 0.6069,
+        "f1": 0.0918,
+        "dice": 0.0918,
+        "iou": 0.0481,
+        "accuracy": 0.7567,
+        "tp": 80584,
+        "fp": 1542397,
+        "fn": 52202,
+        "tn": 4878417
+      },
+      "th_0.50": {
+        "precision": 0.0635,
+        "recall": 0.3876,
+        "f1": 0.1091,
+        "dice": 0.1091,
+        "iou": 0.0577,
+        "accuracy": 0.8717,
+        "tp": 51471,
+        "fp": 759275,
+        "fn": 81315,
+        "tn": 5661539
+      }
+    },
+    "selected_threshold": 0.5
+  },
+  "test_metrics_at_selected_validation_threshold": {
+    "precision": 0.0714,
+    "recall": 0.4432,
+    "f1": 0.123,
+    "dice": 0.123,
+    "iou": 0.0655,
+    "accuracy": 0.868,
+    "tp": 60651,
+    "fp": 788676,
+    "fn": 76198,
+    "tn": 5628075,
+    "optimal_threshold": 0.5,
+    "optimal_f1": 0.123,
+    "total_samples": 100,
+    "threshold_sweep": {
+      "th_0.20": {
+        "precision": 0.0297,
+        "recall": 0.9023,
+        "f1": 0.0575,
+        "dice": 0.0575,
+        "iou": 0.0296,
+        "accuracy": 0.3822,
+        "tp": 123473,
+        "fp": 4035111,
+        "fn": 13376,
+        "tn": 2381640
+      },
+      "th_0.30": {
+        "precision": 0.0442,
+        "recall": 0.776,
+        "f1": 0.0836,
+        "dice": 0.0836,
+        "iou": 0.0436,
+        "accuracy": 0.6449,
+        "tp": 106197,
+        "fp": 2296848,
+        "fn": 30652,
+        "tn": 4119903
+      },
+      "th_0.40": {
+        "precision": 0.0546,
+        "recall": 0.6599,
+        "f1": 0.1008,
+        "dice": 0.1008,
+        "iou": 0.0531,
+        "accuracy": 0.7543,
+        "tp": 90300,
+        "fp": 1563811,
+        "fn": 46549,
+        "tn": 4852940
+      },
+      "th_0.50": {
+        "precision": 0.0714,
+        "recall": 0.4432,
+        "f1": 0.123,
+        "dice": 0.123,
+        "iou": 0.0655,
+        "accuracy": 0.868,
+        "tp": 60651,
+        "fp": 788676,
+        "fn": 76198,
+        "tn": 5628075
+      }
+    },
+    "selected_validation_threshold": 0.5,
+    "selected_from_validation": true
+  },
+  "total_training_duration_seconds": 556.17,
+  "total_training_duration_minutes": 9.27,
+  "hardware_device": "mps",
+  "model_parameters": 12376778,
+  "config": {
+    "training": {
+      "epochs": 10,
+      "batch_size": 8,
+      "learning_rate": 0.0001,
+      "weight_decay": 0.0001,
+      "optimizer": "AdamW",
+      "scheduler": "CosineAnnealingLR",
+      "early_stopping_patience": 4,
+      "mixed_precision": true,
+      "num_workers": 2,
+      "pin_memory": true
+    },
+    "data": {
+      "image_size": [
+        256,
+        256
+      ],
+      "max_train_samples": 500,
+      "max_val_samples": 100,
+      "max_test_samples": 100
+    },
+    "model": {
+      "architecture": "CadastreUNetFull",
+      "encoder_channels": [
+        32,
+        64,
+        128,
+        256,
+        512
+      ],
+      "pmg_channels": 128,
+      "dropout": 0.1,
+      "pmg": {
+        "enabled": true,
+        "scales": 4
+      },
+      "domain_generalization": {
+        "enabled": true,
+        "prob": 0.5
+      },
+      "connectivity": {
+        "enabled": true,
+        "num_directions": 8
+      }
+    },
+    "loss": {
+      "boundary_loss_weight": 1.0,
+      "connectivity_loss_weight": 0.5,
+      "focal_weight": 0.3,
+      "dice_weight": 0.7,
+      "connectivity_pos_weight": 15.0,
+      "focal": {
+        "alpha": 0.75,
+        "gamma": 2.0
+      },
+      "dice": {
+        "smooth": 1.0
+      }
+    }
+  }
+}

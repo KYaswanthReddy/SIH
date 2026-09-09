@@ -1,0 +1,66 @@
+# SIH26012 Full Architecture (PMG + DG + Connectivity) Production 512x512 Configuration
+# Full dataset: 2500 train, 600 val, 600 test at native 512x512 resolution.
+# Uses validated loss settings: Focal alpha=0.75, Focal weight=0.3, Dice weight=0.7, Connectivity pos_weight=15.0.
+
+experiment:
+  name: "full_512_fixed_cadastre_network"
+  output_dir: "experiments/full_512_fixed/results"
+  checkpoint_dir: "experiments/full_512_fixed/results/checkpoints"
+  metrics_dir: "experiments/full_512_fixed/results/metrics"
+  predictions_dir: "experiments/full_512_fixed/results/visualizations"
+  visualizations_dir: "experiments/full_512_fixed/results/visualizations"
+  summary_dir: "experiments/full_512_fixed/results/summary"
+  seed: 42
+
+data:
+  processed_dir: "data/processed"
+  metadata_dir: "data/processed/metadata"
+  train_metadata: "data/processed/metadata/patches_train.csv"
+  val_metadata: "data/processed/metadata/patches_val.csv"
+  test_metadata: "data/processed/metadata/patches_test.csv"
+  image_size: [512, 512]
+  in_channels: 3
+  out_channels: 1
+
+model:
+  architecture: "CadastreUNetFull"
+  encoder_channels: [32, 64, 128, 256, 512]
+  pmg_channels: 128
+  dropout: 0.1
+  pmg:
+    enabled: true
+    scales: 4
+  domain_generalization:
+    enabled: true
+    prob: 0.5
+  connectivity:
+    enabled: true
+    num_directions: 8
+
+loss:
+  boundary_loss_weight: 1.0
+  connectivity_loss_weight: 0.5
+  focal_weight: 0.3
+  dice_weight: 0.7
+  connectivity_pos_weight: 15.0
+  focal:
+    alpha: 0.75
+    gamma: 2.0
+  dice:
+    smooth: 1.0
+
+training:
+  epochs: 15
+  batch_size: 8
+  learning_rate: 1.0e-4
+  weight_decay: 1.0e-4
+  optimizer: "AdamW"
+  scheduler: "CosineAnnealingLR"
+  early_stopping_patience: 4
+  mixed_precision: true
+  num_workers: 4
+  pin_memory: true
+
+evaluation:
+  thresholds: [0.2, 0.3, 0.4, 0.5]
+  default_threshold: 0.5

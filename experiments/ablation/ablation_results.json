@@ -1,0 +1,38 @@
+[
+  {
+    "Model": "Baseline (Residual U-Net)",
+    "F1": 0.124,
+    "IoU": 0.0661,
+    "Precision": 0.0661,
+    "Recall": 1.0,
+    "Dice": 0.124,
+    "Fragmentation": 0.0
+  },
+  {
+    "Model": "+ PMG",
+    "F1": 0.124,
+    "IoU": 0.0661,
+    "Precision": 0.0661,
+    "Recall": 1.0,
+    "Dice": 0.124,
+    "Fragmentation": 0.0
+  },
+  {
+    "Model": "+ PMG + DG",
+    "F1": 0.124,
+    "IoU": 0.0661,
+    "Precision": 0.0661,
+    "Recall": 1.0,
+    "Dice": 0.124,
+    "Fragmentation": 0.0
+  },
+  {
+    "Model": "+ PMG + DG + Connectivity (Full)",
+    "F1": 0.124,
+    "IoU": 0.0661,
+    "Precision": 0.0661,
+    "Recall": 1.0,
+    "Dice": 0.124,
+    "Fragmentation": 0.0
+  }
+]

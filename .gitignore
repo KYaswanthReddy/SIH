@@ -1,0 +1,42 @@
+# Environments & Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# System & OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Heavy Datasets & Large GeoTIFF Tiles (>100MB)
+data/
+SIH26012_COLAB/data/
+*.tif
+*.tiff
+*.zip
+*.tar.gz
+ziAyn8kl
+
+# Heavy Model Checkpoints (>50MB)
+*.pth
+*.pt
+*.onnx
+checkpoints/
+**/checkpoints/
+
+# Jupyter Checkpoints
+.ipynb_checkpoints/

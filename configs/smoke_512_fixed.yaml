@@ -1,0 +1,68 @@
+# SIH26012 Full Architecture (PMG + DG + Connectivity) 512x512 GPU Smoke Test Configuration
+# Used for fast 1-epoch verification of 512x512 tensor throughput, memory allocation, and pipeline correctness.
+
+experiment:
+  name: "smoke_512_fixed_cadastre_network"
+  output_dir: "experiments/smoke_512_fixed/results"
+  checkpoint_dir: "experiments/smoke_512_fixed/results/checkpoints"
+  metrics_dir: "experiments/smoke_512_fixed/results/metrics"
+  predictions_dir: "experiments/smoke_512_fixed/results/visualizations"
+  visualizations_dir: "experiments/smoke_512_fixed/results/visualizations"
+  summary_dir: "experiments/smoke_512_fixed/results/summary"
+  seed: 42
+
+data:
+  processed_dir: "data/processed"
+  metadata_dir: "data/processed/metadata"
+  train_metadata: "data/processed/metadata/patches_train.csv"
+  val_metadata: "data/processed/metadata/patches_val.csv"
+  test_metadata: "data/processed/metadata/patches_test.csv"
+  max_train_samples: 32
+  max_val_samples: 16
+  max_test_samples: 16
+  image_size: [512, 512]
+  in_channels: 3
+  out_channels: 1
+
+model:
+  architecture: "CadastreUNetFull"
+  encoder_channels: [32, 64, 128, 256, 512]
+  pmg_channels: 128
+  dropout: 0.1
+  pmg:
+    enabled: true
+    scales: 4
+  domain_generalization:
+    enabled: true
+    prob: 0.5
+  connectivity:
+    enabled: true
+    num_directions: 8
+
+loss:
+  boundary_loss_weight: 1.0
+  connectivity_loss_weight: 0.5
+  focal_weight: 0.3
+  dice_weight: 0.7
+  connectivity_pos_weight: 15.0
+  focal:
+    alpha: 0.75
+    gamma: 2.0
+  dice:
+    smooth: 1.0
+
+training:
+  epochs: 1
+  batch_size: 8
+  learning_rate: 1.0e-4
+  weight_decay: 1.0e-4
+  optimizer: "AdamW"
+  scheduler: "CosineAnnealingLR"
+  early_stopping_patience: 2
+  mixed_precision: true
+  num_workers: 0
+  pin_memory: true
+
+evaluation:
+  thresholds: [0.2, 0.3, 0.4, 0.5]
+  default_threshold: 0.5

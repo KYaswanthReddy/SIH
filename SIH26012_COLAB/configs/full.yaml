@@ -1,0 +1,61 @@
+# SIH26012 Full Architecture (PMG + DG + Connectivity) Configuration
+
+experiment:
+  name: "full_cadastre_network"
+  output_dir: "experiments/full"
+  checkpoint_dir: "experiments/full/checkpoints"
+  metrics_dir: "experiments/full/metrics"
+  predictions_dir: "experiments/full/predictions"
+  seed: 42
+
+data:
+  processed_dir: "data/processed"
+  metadata_dir: "data/processed/metadata"
+  train_metadata: "data/processed/metadata/patches_train.csv"
+  val_metadata: "data/processed/metadata/patches_val.csv"
+  test_metadata: "data/processed/metadata/patches_test.csv"
+  image_size: [512, 512]
+  in_channels: 3
+  out_channels: 1
+
+model:
+  architecture: "CadastreUNetFull"
+  encoder_channels: [32, 64, 128, 256, 512]
+  pmg_channels: 128
+  dropout: 0.1
+  pmg:
+    enabled: true
+    scales: 4
+  domain_generalization:
+    enabled: true
+    prob: 0.5
+  connectivity:
+    enabled: true
+    num_directions: 8
+
+loss:
+  boundary_loss_weight: 1.0
+  connectivity_loss_weight: 0.5
+  focal_weight: 0.5
+  dice_weight: 0.5
+  focal:
+    alpha: 0.25
+    gamma: 2.0
+  dice:
+    smooth: 1.0
+
+training:
+  epochs: 15
+  batch_size: 8
+  learning_rate: 1.0e-4
+  weight_decay: 1.0e-4
+  optimizer: "AdamW"
+  scheduler: "CosineAnnealingLR"
+  early_stopping_patience: 3
+  mixed_precision: true
+  num_workers: 4
+  pin_memory: true
+
+evaluation:
+  thresholds: [0.3, 0.4, 0.5, 0.6, 0.7]
+  default_threshold: 0.5

@@ -1,0 +1,32 @@
+{
+  "epoch": [
+    1
+  ],
+  "train_loss": [
+    0.9619
+  ],
+  "val_loss": [
+    0.9144
+  ],
+  "val_f1": [
+    0.0136
+  ],
+  "val_dice": [
+    0.0136
+  ],
+  "val_iou": [
+    0.0068
+  ],
+  "val_precision": [
+    0.0213
+  ],
+  "val_recall": [
+    0.01
+  ],
+  "lr": [
+    0.0001
+  ],
+  "time_seconds": [
+    8.94
+  ]
+}
