@@ -87,6 +87,25 @@ def get_demo_samples():
     """
     Returns curated demo samples (Benchmark Urban, High-Density Parcels, Rural, Validation, Test).
     """
+    manifest_path = "demo_data/manifest.json"
+    if os.path.exists(manifest_path):
+        with open(manifest_path, "r") as f:
+            manifest = json.load(f)
+        samples_list = []
+        for row in manifest:
+            samples_list.append({
+                "patch_id": row["patch_id"],
+                "tile_id": row["tile_id"],
+                "split": row["split"],
+                "is_urban": bool(row["is_urban"]),
+                "boundary_pixels": int(row.get("boundary_pixels", 0)),
+                "boundary_density": round(float(row.get("boundary_density", 0.05)), 4),
+                "image_url": f"/api/sample-image/{row['patch_id']}",
+                "mask_url": f"/api/sample-mask/{row['patch_id']}",
+                "wgs84_bounds": row.get("wgs84_bounds"),
+            })
+        return {"samples": samples_list}
+
     df = gis_service.metadata_df
     if df.empty:
         return {"samples": []}
@@ -168,12 +187,13 @@ def predict_cadastral_boundaries(req: InferenceRequest):
     Returns:
       - heatmap_base64: raw probability map (grayscale, prob*255)
       - skeleton_image_base64: skeletonized AI prediction as white lines on
-        transparent PNG — matches the style of the offline GT mask visualization
-        (Panel 2 in training result images)
+        transparent PNG
     """
     demo_pred = f"demo_data/predictions/{req.patch_id}.npy"
     if os.path.exists(demo_pred):
         prob_map = np.load(demo_pred).astype(np.float32) / 255.0
+        mean_conf = float(prob_map.mean())
+        max_conf = float(prob_map.max())
     else:
         demo_img = f"demo_data/images/{req.patch_id}.png"
         if os.path.exists(demo_img):
@@ -187,6 +207,8 @@ def predict_cadastral_boundaries(req: InferenceRequest):
 
         inf_res = inference_service.predict(img, model_name=req.model_name)
         prob_map = inf_res["prob_map"]
+        mean_conf = float(inf_res["mean_confidence"])
+        max_conf = float(inf_res["max_confidence"])
 
     PREDICTION_CACHE[req.patch_id] = prob_map
 
@@ -198,33 +220,25 @@ def predict_cadastral_boundaries(req: InferenceRequest):
     prob_b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
 
     # --- 2. Skeletonized line image (white on transparent) ----------------------
-    # Threshold at 0.35 (UI default) → binary → skeleton → RGBA PNG
-    # This produces clean, thin, continuous lines identical to the GT mask
-    # visualization (Panel 2 of training result images).
     try:
         import cv2
         from gis.skeletonization import fast_skeletonize
         DEFAULT_THRESHOLD = 0.35
         binary = (prob_map >= DEFAULT_THRESHOLD).astype(np.uint8)
-        skel   = fast_skeletonize(binary)  # 1-pixel thin lines
+        skel   = fast_skeletonize(binary)
 
-        # Build two-layer RGBA image: dark halo + bright lime-green foreground
-        # This produces the same clean "cadastral line" look as the GT mask panel
-        # but stays visible over any aerial imagery background.
         h, w = skel.shape
         skel_rgba = np.zeros((h, w, 4), dtype=np.uint8)
 
-        # Layer 1: 5px black halo for contrast against any background
         kern_halo = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
         halo = cv2.dilate(skel.astype(np.uint8) * 255, kern_halo, iterations=1)
         halo_mask = halo > 0
-        skel_rgba[halo_mask] = [0, 0, 0, 180]           # dark halo
+        skel_rgba[halo_mask] = [0, 0, 0, 180]
 
-        # Layer 2: 2px bright lime-green core
         kern_core = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
         core = cv2.dilate(skel.astype(np.uint8) * 255, kern_core, iterations=1)
         core_mask = core > 0
-        skel_rgba[core_mask] = [0, 255, 136, 245]        # bright #00FF88 green
+        skel_rgba[core_mask] = [0, 255, 136, 245]
 
         skel_img = Image.fromarray(skel_rgba, mode="RGBA")
         buf2 = io.BytesIO()
@@ -234,14 +248,13 @@ def predict_cadastral_boundaries(req: InferenceRequest):
         print(f"[predict] skeleton image generation failed: {e}")
         skel_b64 = None
 
-
     bounds = gis_service.get_patch_wgs84_bounds(req.patch_id)
 
     return {
         "patch_id": req.patch_id,
         "model_name": req.model_name,
-        "mean_confidence": inf_res["mean_confidence"],
-        "max_confidence": inf_res["max_confidence"],
+        "mean_confidence": mean_conf,
+        "max_confidence": max_conf,
         "heatmap_base64": f"data:image/png;base64,{prob_b64}",
         "skeleton_image_base64": skel_b64,
         "wgs84_bounds": bounds,
@@ -261,12 +274,20 @@ def vectorize_prediction(req: VectorizeRequest):
     if req.patch_id in PREDICTION_CACHE:
         prob_map = PREDICTION_CACHE[req.patch_id]
     else:
-        # Compute default inference
-        img_path = os.path.join("data/processed", meta["image_path"])
-        img = np.array(Image.open(img_path).convert("RGB"))
-        inf_res = inference_service.predict(img, model_name="full")
-        prob_map = inf_res["prob_map"]
-        PREDICTION_CACHE[req.patch_id] = prob_map
+        demo_pred = f"demo_data/predictions/{req.patch_id}.npy"
+        if os.path.exists(demo_pred):
+            prob_map = np.load(demo_pred).astype(np.float32) / 255.0
+            PREDICTION_CACHE[req.patch_id] = prob_map
+        else:
+            demo_img = f"demo_data/images/{req.patch_id}.png"
+            if os.path.exists(demo_img):
+                img = np.array(Image.open(demo_img).convert("RGB"))
+            else:
+                img_path = os.path.join("data/processed", meta.get("image_path", ""))
+                img = np.array(Image.open(img_path).convert("RGB"))
+            inf_res = inference_service.predict(img, model_name="full")
+            prob_map = inf_res["prob_map"]
+            PREDICTION_CACHE[req.patch_id] = prob_map
 
     transform = meta["transform"]
     gis_res = gis_service.vectorize_and_audit(

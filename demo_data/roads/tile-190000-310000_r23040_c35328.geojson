@@ -1,0 +1,1 @@
+{"type": "FeatureCollection", "features": [{"id": "0", "type": "Feature", "properties": {"road_id": "ROAD_001", "class": "Local Access Road", "layer": "Supporting Road Network"}, "geometry": {"type": "LineString", "coordinates": [[6.009114894393527, 50.81539284774554], [6.010930946126055, 50.815383058513774]]}}], "layer_info": "Supporting Road Network (Context Layer)"}
