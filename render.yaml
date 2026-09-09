@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: cadastrevision-skygen
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/patches
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 10000

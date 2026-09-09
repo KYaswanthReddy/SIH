@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  cadastrevision-webgis:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cadastrevision_app
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/patches"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
