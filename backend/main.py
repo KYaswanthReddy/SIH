@@ -129,10 +129,13 @@ def get_demo_samples():
 
 @app.get("/api/sample-image/{patch_id}")
 def get_sample_image(patch_id: str):
+    demo_path = f"demo_data/images/{patch_id}.png"
+    if os.path.exists(demo_path):
+        return FileResponse(demo_path, media_type="image/png")
     meta = gis_service.get_patch_metadata(patch_id)
     if not meta:
         raise HTTPException(status_code=404, detail="Patch not found")
-    img_path = os.path.join("data/processed", meta["image_path"])
+    img_path = os.path.join("data/processed", meta.get("image_path", ""))
     if not os.path.exists(img_path):
         raise HTTPException(status_code=404, detail="Image file not found")
     return FileResponse(img_path, media_type="image/png")
@@ -143,7 +146,7 @@ def get_sample_mask(patch_id: str):
     meta = gis_service.get_patch_metadata(patch_id)
     if not meta:
         raise HTTPException(status_code=404, detail="Patch not found")
-    mask_path = os.path.join("data/processed", meta["mask_path"])
+    mask_path = os.path.join("data/processed", meta.get("mask_path", ""))
     if not os.path.exists(mask_path):
         raise HTTPException(status_code=404, detail="Mask file not found")
     return FileResponse(mask_path, media_type="image/png")
@@ -168,16 +171,23 @@ def predict_cadastral_boundaries(req: InferenceRequest):
         transparent PNG — matches the style of the offline GT mask visualization
         (Panel 2 in training result images)
     """
-    meta = gis_service.get_patch_metadata(req.patch_id)
-    if not meta:
-        raise HTTPException(status_code=404, detail="Patch metadata not found")
+    demo_pred = f"demo_data/predictions/{req.patch_id}.npy"
+    if os.path.exists(demo_pred):
+        prob_map = np.load(demo_pred).astype(np.float32) / 255.0
+    else:
+        demo_img = f"demo_data/images/{req.patch_id}.png"
+        if os.path.exists(demo_img):
+            img = np.array(Image.open(demo_img).convert("RGB"))
+        else:
+            meta = gis_service.get_patch_metadata(req.patch_id)
+            if not meta:
+                raise HTTPException(status_code=404, detail="Patch metadata not found")
+            img_path = os.path.join("data/processed", meta.get("image_path", ""))
+            img = np.array(Image.open(img_path).convert("RGB"))
 
-    img_path = os.path.join("data/processed", meta["image_path"])
-    img = np.array(Image.open(img_path).convert("RGB"))
+        inf_res = inference_service.predict(img, model_name=req.model_name)
+        prob_map = inf_res["prob_map"]
 
-    # Run inference
-    inf_res = inference_service.predict(img, model_name=req.model_name)
-    prob_map = inf_res["prob_map"]
     PREDICTION_CACHE[req.patch_id] = prob_map
 
     # --- 1. Raw probability heatmap (grayscale) ---------------------------------

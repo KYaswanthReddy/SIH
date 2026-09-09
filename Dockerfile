@@ -21,8 +21,9 @@ WORKDIR /app
 # Copy dependency specifications
 COPY requirements.txt /app/requirements.txt
 
-# Install PyTorch CPU and Python dependencies
+# Install PyTorch CPU-only (lightweight, ~130MB, NO NVIDIA CUDA overhead)
 RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu && \
     pip install --no-cache-dir -r requirements.txt
 
 # Copy application source code

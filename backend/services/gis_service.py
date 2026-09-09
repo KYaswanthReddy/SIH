@@ -22,7 +22,13 @@ class GISService:
     """
 
     def __init__(self, metadata_path: str = "data/processed/metadata/patches_all.csv"):
-        self.metadata_df = pd.read_csv(metadata_path) if os.path.exists(metadata_path) else pd.DataFrame()
+        if os.path.exists(metadata_path):
+            self.metadata_df = pd.read_csv(metadata_path)
+        elif os.path.exists("demo_data/manifest.json"):
+            with open("demo_data/manifest.json", "r") as f:
+                self.metadata_df = pd.DataFrame(json.load(f))
+        else:
+            self.metadata_df = pd.DataFrame()
         self.pipeline = RasterToVectorGISPipeline()
 
     def get_patch_metadata(self, patch_id: str) -> Optional[Dict[str, Any]]:
@@ -184,6 +190,8 @@ class GISService:
         meta = self.get_patch_metadata(patch_id)
         if not meta:
             return None
+        if meta.get("wgs84_bounds"):
+            return meta["wgs84_bounds"]
         t = meta.get("transform")
         if isinstance(t, (list, tuple)):
             t = Affine(*t[:6])
@@ -229,6 +237,11 @@ class GISService:
         Returns modular supporting GIS layers (Building Footprints or Roads) for context.
         Clearly labeled as supporting layers.
         """
+        demo_layer = f"demo_data/{layer_type}/{patch_id}.geojson"
+        if os.path.exists(demo_layer):
+            with open(demo_layer, "r") as f:
+                return json.load(f)
+
         meta = self.get_patch_metadata(patch_id)
         if not meta:
             return {"type": "FeatureCollection", "features": [], "layer_type": layer_type, "is_supporting_layer": True}
@@ -269,6 +282,11 @@ class GISService:
         """
         Extract crisp vector GeoJSON from ground-truth mask for ground-truth overlay.
         """
+        demo_vec = f"demo_data/vectors/{patch_id}.geojson"
+        if os.path.exists(demo_vec):
+            with open(demo_vec, "r") as f:
+                return json.load(f)
+
         from PIL import Image
         from gis.skeletonization import fast_skeletonize
         from gis.vectorization import vectorize_skeleton
