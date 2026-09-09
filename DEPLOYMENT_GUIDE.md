@@ -1,182 +1,143 @@
-# 🚀 CadastreVision Deployment Guide (Step-by-Step)
+# 🚀 CadastreVision Deployment Guide: Render & Vercel (Step-by-Step)
 
-This guide walks you through deploying the **CadastreVision (SkyGen)** AI & WebGIS platform so that your team and SIH evaluators can access the live working prototype over the public internet.
-
----
-
-## 🧭 Which Deployment Option Should You Choose?
-
-| Scenario | Best Option | Setup Time | Cost |
-| :--- | :--- | :--- | :--- |
-| **Instant Live Demo for Evaluators** | **Option 1: Cloudflare Tunnel / ngrok** | **30 Seconds** | **100% Free** |
-| **Free Always-On Cloud Hosting** | **Option 2: Render.com** | **3 Minutes** | **100% Free** |
-| **AI/ML Showcase & Public Space** | **Option 3: Hugging Face Spaces** | **3 Minutes** | **100% Free** |
-| **Self-Hosted Cloud Server** | **Option 4: Docker / AWS EC2 / VPS** | **10 Minutes** | Cloud VM Cost |
+This guide walks you through deploying the **CadastreVision (SkyGen)** AI & WebGIS platform using the industry-standard split architecture:
+- **Backend (Render.com)**: Python 3.10 + GDAL/GEOS + PyTorch AI Inference + FastAPI running in a Docker container.
+- **Frontend (Vercel.com)**: Ultra-fast global Edge CDN hosting the Leaflet WebGIS interface, topology inspection tools, and SIH slide deck.
 
 ---
 
-## ⚡ Option 1: Instant Public URL for Evaluators (Zero Setup, 30s)
+## 🏗️ Architecture Overview
 
-If you are demonstrating to the SIH judges from your laptop and want a secure, instant **HTTPS** link that works on phones, tablets, and evaluators' screens without paying or setting up servers:
-
-### Step 1: Start the Application Locally
-In your project directory terminal, run:
-```bash
-# Activate your python virtual environment
-source .venv/bin/activate
-
-# Launch the FastAPI WebGIS server
-python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000
-```
-Verify it works by opening: `http://localhost:8000`
-
-### Step 2: Create an Instant Public HTTPS Tunnel
-Open a **new terminal tab** and run either Cloudflare Tunnel or ngrok:
-
-#### Method A: Using Cloudflare Tunnel (No account or login needed!)
-```bash
-npx -y cloudflared tunnel --url http://localhost:8000
-```
-Cloudflare will immediately generate a public HTTPS URL like:
-```text
-https://random-words-1234.trycloudflare.com
-```
-Give this link to anyone in the world — it will connect directly to your live WebGIS interface and API!
-
-#### Method B: Using ngrok
-```bash
-ngrok http 8000
+```mermaid
+flowchart LR
+    User["🌐 Evaluator / Browser"] --> Vercel["⚡ Vercel Edge CDN<br/>(Frontend WebGIS & Slides)"]
+    Vercel -->|"REST API / CORS"| Render["🐳 Render Web Service<br/>(FastAPI + PyTorch AI + GDAL)"]
+    Render -->|"GeoJSON Polygons & Heatmaps"| User
 ```
 
 ---
 
-## 🌐 Option 2: Deploy on Render.com (100% Free Always-On Web Service)
+## 🟢 PART 1: Deploy Backend on Render (AI & GIS Engine)
 
-Render connects directly to your GitHub repository ([`https://github.com/KYaswanthReddy/SIH`](https://github.com/KYaswanthReddy/SIH)) and builds automatically whenever you push new commits.
+Render builds and runs our multi-stage [`Dockerfile`](file:///Users/kyashwanth/Documents/sih/Dockerfile) containing Python, GDAL, GEOS, and PyTorch.
 
-### Step-by-Step Instructions:
+### Step 1: Sign In to Render
+1. Open [dashboard.render.com](https://dashboard.render.com) in your browser.
+2. Sign in using your **GitHub account** (`KYaswanthReddy`).
 
-1. **Sign in to Render**:
-   - Go to [dashboard.render.com](https://dashboard.render.com).
-   - Sign in with your GitHub account (`KYaswanthReddy`).
+### Step 2: Create a New Web Service
+1. In the top-right corner, click the **"New +"** button.
+2. Select **"Web Service"**.
 
-2. **Create a New Web Service**:
-   - Click the **"New +"** button in the top bar.
-   - Select **"Web Service"**.
+### Step 3: Connect Your GitHub Repository
+1. Select **"Build and deploy from a Git repository"** and click **Next**.
+2. Find your repository: `KYaswanthReddy/SIH` and click **"Connect"**.
+   *(If not visible, click "Configure GitHub App" to grant Render access to the repository).*
 
-3. **Connect Your Repository**:
-   - Choose **"Build and deploy from a Git repository"** and click **Next**.
-   - Under your connected repositories, locate `SIH` (`KYaswanthReddy/SIH`) and click **"Connect"**.
+### Step 4: Configure the Service
+Fill in the following fields:
+- **Name**: `cadastrevision-skygen` *(recommended so it matches default config)*
+- **Region**: Choose closest to you (e.g., `Singapore`, `Frankfurt`, or `Oregon`)
+- **Branch**: `main`
+- **Runtime**: **Docker** *(Render auto-detects [`Dockerfile`](file:///Users/kyashwanth/Documents/sih/Dockerfile))*
+- **Instance Type**: **Free** ($0/month)
 
-4. **Configure the Service**:
-   - **Name**: `cadastrevision-skygen` (or any name you prefer)
-   - **Region**: Choose closest to India (e.g. `Singapore` or `Frankfurt` or `Oregon`)
-   - **Branch**: `main`
-   - **Runtime**: **Docker** (Render will automatically detect the [`Dockerfile`](file:///Users/kyashwanth/Documents/sih/Dockerfile) we created)
-   - **Instance Type**: **Free** ($0/month)
+### Step 5: Advanced Settings
+Expand **"Advanced"** at the bottom:
+- **Health Check Path**: `/api/health`
+- **Auto-Deploy**: `Yes` (automatically redeploys whenever you push to GitHub)
 
-5. **Advanced Settings (Optional)**:
-   - Health Check Path: `/api/patches`
-   - Port: `8000`
-
-6. **Click "Create Web Service"**:
-   - Render will pull your repo, build the Docker container, install GDAL/PyTorch/FastAPI, and deploy.
-   - In 2–3 minutes, you will receive your live URL:
-     ```text
-     https://cadastrevision-skygen.onrender.com
-     ```
-
-7. **Available Live Routes**:
-   - **Live WebGIS Interface**: `https://cadastrevision-skygen.onrender.com/`
-   - **Interactive PPT Presentation**: `https://cadastrevision-skygen.onrender.com/presentation`
-   - **API Documentation (Swagger UI)**: `https://cadastrevision-skygen.onrender.com/docs`
-   - **Download PPTX File**: `https://cadastrevision-skygen.onrender.com/SIH26012_Idea_Presentation.pptx`
-
----
-
-## 🤗 Option 3: Deploy on Hugging Face Spaces (Free AI Cloud Hosting)
-
-Hugging Face Spaces is designed specifically for AI models and hackathon presentations.
-
-### Step-by-Step Instructions:
-
-1. Go to [huggingface.co/new-space](https://huggingface.co/new-space).
-2. Set:
-   - **Space Name**: `CadastreVision-SkyGen`
-   - **License**: `MIT` or `Apache 2.0`
-   - **SDK**: Select **Docker** -> **Blank**.
-   - **Hardware**: **CPU basic · 2 vCPU · 16 GB · Free**
-3. Click **"Create Space"**.
-4. Push your repository to Hugging Face:
-   ```bash
-   git remote add hf https://huggingface.co/spaces/YOUR_USERNAME/CadastreVision-SkyGen
-   git push hf main
-   ```
-5. Hugging Face will build the container and provide a permanent URL:
+### Step 6: Deploy
+1. Click **"Create Web Service"**.
+2. Render will start pulling the Docker image, installing GDAL/PyTorch dependencies, and launching FastAPI.
+3. Building takes **2–4 minutes**. Once complete, the status turns green: **"Live"**.
+4. Copy your backend URL at the top of the dashboard:
    ```text
-   https://huggingface.co/spaces/YOUR_USERNAME/CadastreVision-SkyGen
+   https://cadastrevision-skygen.onrender.com
+   ```
+5. Test it in your browser: `https://cadastrevision-skygen.onrender.com/api/health`
+   - You should see: `{"status":"healthy","system":"SIH26012 Cadastral Extraction System",...}`
+
+> [!NOTE]
+> **Render Free Tier Cold Start**: On the free tier, Render puts the container to sleep after 15 minutes of inactivity. When you open it after a while, the very first request takes **30–45 seconds** to wake up. Subsequent requests run instantly!
+
+---
+
+## ⚡ PART 2: Deploy Frontend on Vercel (Fast WebGIS UI)
+
+Vercel serves the interactive map, slide deck, and topology audit deck with zero latency from 100+ global edge locations.
+
+### Step 1: Sign In to Vercel
+1. Open [vercel.com](https://vercel.com) in your browser.
+2. Sign in with your **GitHub account** (`KYaswanthReddy`).
+
+### Step 2: Import Your Project
+1. In the Vercel Dashboard, click **"Add New..."** → **"Project"**.
+2. Locate `KYaswanthReddy/SIH` in your repository list and click **"Import"**.
+
+### Step 3: Configure Project Settings
+- **Project Name**: `sih-cadastrevision` (or any name you prefer)
+- **Framework Preset**: **Other**
+- **Root Directory**: `./` *(leave as root; our [`vercel.json`](file:///Users/kyashwanth/Documents/sih/vercel.json) handles routing)*
+- **Build and Output Settings**: Leave empty / default.
+- **Environment Variables**: None needed!
+
+### Step 4: Click Deploy
+1. Click the **"Deploy"** button.
+2. Vercel compiles and publishes the edge deployment in **15–30 seconds**.
+3. You will get your live public URL:
+   ```text
+   https://sih-cadastrevision.vercel.app
    ```
 
 ---
 
-## 🐳 Option 4: Deploy on Any Cloud VM (AWS EC2 / GCP / DigitalOcean)
+## 🔗 PART 3: Connect Frontend to Backend
 
-If you have an Ubuntu Linux server or cloud virtual machine:
+We have built 3 automatic mechanisms so the frontend and backend talk to each other without configuration errors:
 
-### Step 1: Install Docker & Docker Compose
-```bash
-sudo apt update
-sudo apt install -y docker.io docker-compose-v2
-sudo usermod -aG docker $USER
-```
+### Method 1: Automatic Connection (Default)
+- If your Render backend is named `cadastrevision-skygen`, the frontend automatically connects to `https://cadastrevision-skygen.onrender.com` without doing anything!
 
-### Step 2: Clone the Repository
-```bash
-git clone https://github.com/KYaswanthReddy/SIH.git
-cd SIH
-```
+### Method 2: One-Click Navbar Setting (If using a custom name)
+1. Open your live Vercel site: `https://your-project.vercel.app`
+2. In the top navigation bar, click the **"API: ..."** status pill.
+3. A modal prompt appears: paste your Render backend URL (e.g. `https://your-custom-backend.onrender.com`).
+4. Click **OK**. The site immediately connects, verifies health, and loads sample tiles!
 
-### Step 3: Launch with Docker Compose
-```bash
-docker compose up -d --build
-```
-Check status:
-```bash
-docker compose ps
-docker compose logs -f
-```
-The app will be running on `http://YOUR_SERVER_IP:8000`.
-
-### Step 4: Configure Domain & SSL (Nginx + Certbot)
-```nginx
-server {
-    server_name cadastre.yourdomain.com;
-
-    location / {
-        proxy_pass http://127.0.0.1:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
-Obtain free SSL certificate:
-```bash
-sudo certbot --nginx -d cadastre.yourdomain.com
+### Method 3: Direct URL Parameter (Best for Evaluators)
+You can send evaluators a single link that pre-configures the backend:
+```text
+https://your-project.vercel.app/?api=https://cadastrevision-skygen.onrender.com
 ```
 
 ---
 
-## 🧪 Post-Deployment Health Check Checklist
+## 📋 Live URLs to Showcase to SIH Judges
 
-After deploying to any platform, test these four URLs to ensure 100% functionality:
+Once both are deployed, you have a complete production suite:
 
-1. **Frontend WebGIS UI**: `GET /`
-   - Should display the interactive map with split-screen slider, layer toggles, and drawing tools.
-2. **Patches Catalog**: `GET /api/patches`
-   - Should return a JSON array of available cadastral benchmark patches.
-3. **AI Inference & Vectorization**: `POST /api/vectorize`
-   - Should return GeoJSON polygon boundaries with closed area (m²) and topology report.
-4. **Slide Deck & Presentation**: `GET /presentation`
-   - Should display the official 16:9 widescreen SIH presentation deck.
+| Feature / Page | URL Path | Description |
+| :--- | :--- | :--- |
+| **Interactive WebGIS Platform** | `https://your-project.vercel.app/` | Live AI boundary prediction, split-screen slider, topology audit |
+| **Interactive SIH Slide Deck** | `https://your-project.vercel.app/presentation` | Official 16:9 widescreen presentation slides for team SkyGen |
+| **PowerPoint Download** | `https://your-backend.onrender.com/SIH26012_Idea_Presentation.pptx` | Downloadable native PPTX file for offline submission |
+| **FastAPI Swagger Docs** | `https://your-backend.onrender.com/docs` | Interactive OpenAPI documentation for all 10 endpoints |
+| **System Health API** | `https://your-backend.onrender.com/api/health` | Real-time AI engine and PyTorch device health report |
+
+---
+
+## 🛠️ Alternative: Instant 30-Second Demo via Cloudflare Tunnel
+
+If you want an instant HTTPS link running directly from your laptop during a live demo without waiting for cloud builds:
+
+1. In terminal, start the local server:
+   ```bash
+   source .venv/bin/activate
+   python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000
+   ```
+2. In a second terminal tab, run:
+   ```bash
+   npx -y cloudflared tunnel --url http://localhost:8000
+   ```
+3. Cloudflare gives you an instant temporary public HTTPS URL (e.g. `https://xyz.trycloudflare.com`) that accesses your local system directly.

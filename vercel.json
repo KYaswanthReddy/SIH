@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "routes": [
+    {
+      "src": "/presentation",
+      "dest": "/docs/presentation_slides.html"
+    },
+    {
+      "src": "/deck",
+      "dest": "/docs/presentation_slides.html"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "https://cadastrevision-skygen.onrender.com/api/$1"
+    },
+    {
+      "src": "/frontend/(.*)",
+      "dest": "/frontend/$1"
+    },
+    {
+      "src": "/docs/(.*)",
+      "dest": "/docs/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/index.html"
+    }
+  ]
+}

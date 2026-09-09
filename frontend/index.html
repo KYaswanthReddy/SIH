@@ -135,6 +135,18 @@
         <span class="text-zinc-300 font-medium" id="deviceBadge">AI Production Engine: Active (512×512)</span>
       </div>
 
+      <!-- Presentation Deck Link -->
+      <a href="/presentation" target="_blank" class="hidden sm:flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-blue-950/80 hover:bg-blue-900 text-blue-300 border border-blue-800/60 transition shadow-sm font-semibold">
+        <i data-lucide="presentation" class="w-3.5 h-3.5 text-blue-400"></i>
+        <span>SIH PPT Deck</span>
+      </a>
+
+      <!-- API Status Pill -->
+      <button id="btnApiSettings" class="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg bg-zinc-800/70 hover:bg-zinc-700 text-zinc-300 border border-zinc-700/60 transition" title="Backend API Configuration">
+        <span id="apiStatusDot" class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span class="text-[11px] font-mono hidden md:inline" id="apiStatusLabel">API: Ready</span>
+      </button>
+
       <!-- Toggle Right Sidebar Button -->
       <button id="btnToggleRightSidebar" class="p-2 rounded-lg bg-zinc-800/70 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-zinc-700/60 transition" title="Toggle Right Topology Audit Deck">
         <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
@@ -462,6 +474,42 @@
 
   <!-- APPLICATION LOGIC SCRIPT -->
   <script>
+    // Dynamic Backend API Resolution
+    const DEFAULT_REMOTE_API = 'https://cadastrevision-skygen.onrender.com';
+    let API_BASE = (
+      new URLSearchParams(window.location.search).get('api') ||
+      localStorage.getItem('CADASTRE_API_BASE') ||
+      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : DEFAULT_REMOTE_API)
+    ).replace(/\/+$/, '');
+
+    async function checkApiHealth() {
+      const dot = document.getElementById('apiStatusDot');
+      const label = document.getElementById('apiStatusLabel');
+      if (!dot || !label) return;
+
+      dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-ping';
+      label.innerText = 'API: Connecting...';
+
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 6000);
+        const res = await fetch(`${API_BASE}/api/health`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (res.ok) {
+          const data = await res.json();
+          dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+          label.innerText = `API: Live (${data.device || 'Active'})`;
+        } else {
+          dot.className = 'w-2 h-2 rounded-full bg-amber-500';
+          label.innerText = `API: HTTP ${res.status}`;
+        }
+      } catch (err) {
+        dot.className = 'w-2 h-2 rounded-full bg-rose-500';
+        label.innerText = 'API: Offline (Click to config)';
+      }
+    }
+
     let map = null;
     let aerialLayer = null;
     let heatmapLayer = null;
@@ -552,7 +600,7 @@
     // Fetch and populate demo samples
     async function loadSamples() {
       try {
-        const res = await fetch('/api/demo-samples');
+        const res = await fetch(`${API_BASE}/api/demo-samples`);
         const data = await res.json();
         const select = document.getElementById('sampleSelect');
         select.innerHTML = '';
@@ -600,6 +648,7 @@
         }
       } catch (err) {
         console.error("Failed to load samples:", err);
+        showToast("Connecting to Render backend... (Free tier may take ~30s on cold start)");
       }
     }
 
@@ -615,7 +664,7 @@
       }
 
       // Load Aerial Image overlay onto map using actual geographic patch bounds
-      const imgUrl = `/api/sample-image/${patchId}`;
+      const imgUrl = `${API_BASE}/api/sample-image/${patchId}`;
       const bounds = (sample && sample.wgs84_bounds) ? sample.wgs84_bounds : [[52.2940, 4.6590], [52.2960, 4.6620]];
       _lastBounds = bounds;
       
@@ -657,7 +706,7 @@
       clearGroundTruthVectors();
 
       try {
-        const res = await fetch(`/api/ground-truth-vector/${currentPatchId}`);
+        const res = await fetch(`${API_BASE}/api/ground-truth-vector/${currentPatchId}`);
         const data = await res.json();
         currentGTGeoJSON = data;
 
@@ -738,7 +787,7 @@
       btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i> Predicting...`;
       
       try {
-        const res = await fetch('/api/predict', {
+        const res = await fetch(`${API_BASE}/api/predict`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ patch_id: currentPatchId, model_name: modelName })
@@ -775,7 +824,7 @@
       btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin text-cyan-400"></i> Vectorizing...`;
 
       try {
-        const res = await fetch('/api/vectorize', {
+        const res = await fetch(`${API_BASE}/api/vectorize`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1015,7 +1064,7 @@
           return;
         }
         try {
-          const res = await fetch(`/api/supporting-layers/buildings/${currentPatchId}`);
+          const res = await fetch(`${API_BASE}/api/supporting-layers/buildings/${currentPatchId}`);
           const data = await res.json();
           if (buildingsLayer) map.removeLayer(buildingsLayer);
           buildingsLayer = L.geoJSON(data, {
@@ -1028,7 +1077,7 @@
           return;
         }
         try {
-          const res = await fetch(`/api/supporting-layers/roads/${currentPatchId}`);
+          const res = await fetch(`${API_BASE}/api/supporting-layers/roads/${currentPatchId}`);
           const data = await res.json();
           if (roadsLayer) map.removeLayer(roadsLayer);
           roadsLayer = L.geoJSON(data, {
@@ -1065,7 +1114,28 @@
       lucide.createIcons();
       initMap();
       setupSidebarToggles();
+      checkApiHealth();
       loadSamples();
+
+      // Backend API Settings click modal
+      const btnApi = document.getElementById('btnApiSettings');
+      if (btnApi) {
+        btnApi.addEventListener('click', () => {
+          const current = API_BASE || '';
+          const input = prompt(
+            "Configure CadastreVision Backend API Endpoint:\n\nEnter your Render backend URL (e.g. https://cadastrevision-skygen.onrender.com)\nOr leave empty to use default remote / local host:",
+            current
+          );
+          if (input !== null) {
+            const cleaned = input.trim().replace(/\/+$/, '');
+            API_BASE = cleaned;
+            localStorage.setItem('CADASTRE_API_BASE', cleaned);
+            showToast(`API Base set to: ${cleaned || 'Default Origin'}`);
+            checkApiHealth();
+            loadSamples();
+          }
+        });
+      }
 
       // Sample change
       document.getElementById('sampleSelect').addEventListener('change', (e) => {
