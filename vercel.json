@@ -12,7 +12,7 @@
     },
     {
       "src": "/api/(.*)",
-      "dest": "https://cadastrevision-skygen.onrender.com/api/$1"
+      "dest": "https://cadastrevision-skygen-r5hn.onrender.com/api/$1"
     },
     {
       "src": "/frontend/(.*)",
