@@ -142,9 +142,9 @@
       </a>
 
       <!-- API Status Pill -->
-      <button id="btnApiSettings" class="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg bg-zinc-800/70 hover:bg-zinc-700 text-zinc-300 border border-zinc-700/60 transition" title="Backend API Configuration">
-        <span id="apiStatusDot" class="w-2 h-2 rounded-full bg-emerald-500"></span>
-        <span class="text-[11px] font-mono hidden md:inline" id="apiStatusLabel">API: Ready</span>
+      <button id="btnApiSettings" class="flex items-center gap-2 text-xs px-3 py-1.5 rounded-lg bg-zinc-800/80 hover:bg-zinc-700/80 text-zinc-200 border border-zinc-700/70 transition shadow-sm cursor-pointer active:scale-95" title="Backend Connection & Server Status (Click to configure)">
+        <span id="apiStatusDot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+        <span class="text-[11px] font-mono font-medium" id="apiStatusLabel">API: Connecting...</span>
       </button>
 
       <!-- Toggle Right Sidebar Button -->
@@ -472,6 +472,89 @@
 
   </div>
 
+  <!-- BACKEND CONFIGURATION & DIAGNOSTICS MODAL -->
+  <div id="apiConfigModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[3000] hidden flex items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-zinc-700/80 rounded-2xl shadow-2xl max-w-lg w-full p-5 space-y-4 text-zinc-200">
+      <div class="flex items-center justify-between pb-3 border-b border-zinc-800">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-emerald-950 border border-emerald-800/60 flex items-center justify-center text-emerald-400">
+            <i data-lucide="server" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-zinc-100">Backend API Connection Manager</h3>
+            <p class="text-[11px] text-zinc-400">Render Free Tier & Vercel Edge Configuration</p>
+          </div>
+        </div>
+        <button id="btnCloseApiModal" type="button" class="text-zinc-400 hover:text-zinc-100 p-1.5 rounded-lg hover:bg-zinc-800 transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Current Status Card -->
+      <div class="bg-zinc-950/80 rounded-xl p-3 border border-zinc-800/80 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <span id="modalStatusDot" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+          <div>
+            <div class="text-[11px] text-zinc-400 font-medium">Server State</div>
+            <div id="modalStatusText" class="text-xs font-semibold text-zinc-200">Checking connection...</div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-[11px] text-zinc-400 font-medium">Latency / Device</div>
+          <div id="modalLatencyText" class="text-xs font-mono text-emerald-400">--</div>
+        </div>
+      </div>
+
+      <!-- Render Free Tier Cold Start Notice -->
+      <div class="bg-amber-950/30 border border-amber-800/40 rounded-xl p-3 text-[11px] text-amber-200/90 leading-relaxed space-y-1">
+        <div class="flex items-center gap-1.5 font-semibold text-amber-300">
+          <i data-lucide="info" class="w-3.5 h-3.5"></i>
+          <span>Why does Render show Offline initially?</span>
+        </div>
+        <p>Render free web services automatically spin down into sleep mode after 15 minutes of inactivity. When a request arrives, Render takes <strong>~30–45 seconds</strong> to boot up the container. Once awake, all requests respond in &lt;200ms.</p>
+        <p class="text-[10px] text-amber-300/80 pt-0.5">💡 Our automated keep-alive system pings the backend every 4 minutes while this tab is open to keep it warm!</p>
+      </div>
+
+      <!-- Endpoint Input -->
+      <div class="space-y-1.5">
+        <label for="inputApiBase" class="text-xs font-semibold text-zinc-300">Backend API Base URL</label>
+        <div class="flex gap-2">
+          <input id="inputApiBase" type="text" class="flex-1 bg-zinc-950 border border-zinc-700/80 rounded-lg px-3 py-2 text-xs font-mono text-zinc-100 focus:outline-none focus:border-emerald-500 transition" placeholder="https://cadastrevision-skygen-r5hn.onrender.com" />
+          <button id="btnTestApiConnection" type="button" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 transition active:scale-95 shrink-0">
+            <i data-lucide="activity" class="w-3.5 h-3.5"></i>
+            <span>Test / Wake Up</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Preset Quick Switchers -->
+      <div class="space-y-1.5">
+        <span class="text-[11px] text-zinc-400 font-medium">Quick Presets:</span>
+        <div class="flex flex-wrap gap-2 text-xs">
+          <button id="presetRender" type="button" class="px-2.5 py-1 rounded-md bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 text-[11px] transition">
+            Render Production (Default)
+          </button>
+          <button id="presetVercelProxy" type="button" class="px-2.5 py-1 rounded-md bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 text-[11px] transition">
+            Vercel Edge Proxy (/api)
+          </button>
+          <button id="presetLocal" type="button" class="px-2.5 py-1 rounded-md bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 text-[11px] transition">
+            Localhost (8000)
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-800">
+        <button id="btnCancelApiModal" type="button" class="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition">
+          Cancel
+        </button>
+        <button id="btnSaveApiSettings" type="button" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md transition active:scale-95">
+          Save & Connect
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- APPLICATION LOGIC SCRIPT -->
   <script>
     // Dynamic Backend API Resolution
@@ -482,32 +565,300 @@
       (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : DEFAULT_REMOTE_API)
     ).replace(/\/+$/, '');
 
-    async function checkApiHealth() {
+    // 16 Embedded Curated Benchmark Samples (Guarantees zero blank screen even during Render cold boot)
+    const FALLBACK_MANIFEST = [
+      {
+        patch_id: "tile-190000-310000_r24576_c02048",
+        tile_id: "tile-190000-310000",
+        split: "test",
+        is_urban: true,
+        boundary_pixels: 17507,
+        boundary_density: 0.0668,
+        wgs84_bounds: [[50.812328659246184, 5.891030292329064], [50.81348711860595, 5.892858799260464]]
+      },
+      {
+        patch_id: "tile-100000-470000_r04608_c21504",
+        tile_id: "tile-100000-470000",
+        split: "train",
+        is_urban: true,
+        boundary_pixels: 35496,
+        boundary_density: 0.1354,
+        wgs84_bounds: [[52.29422566923181, 4.659771469870024], [52.29538754677521, 4.661666431079879]]
+      },
+      {
+        patch_id: "tile-190000-310000_r01024_c37376",
+        tile_id: "tile-190000-310000",
+        split: "test",
+        is_urban: true,
+        boundary_pixels: 36618,
+        boundary_density: 0.1397,
+        wgs84_bounds: [[50.86463561593202, 6.017048699964877], [50.86579604040981, 6.01888237392612]]
+      },
+      {
+        patch_id: "tile-190000-310000_r05120_c38912",
+        tile_id: "tile-190000-310000",
+        split: "test",
+        is_urban: true,
+        boundary_pixels: 28005,
+        boundary_density: 0.1068,
+        wgs84_bounds: [[50.85540164645297, 6.022376397164367], [50.856562152823145, 6.024209835469554]]
+      },
+      {
+        patch_id: "tile-190000-310000_r09728_c34304",
+        tile_id: "tile-190000-310000",
+        split: "test",
+        is_urban: false,
+        boundary_pixels: 13957,
+        boundary_density: 0.0532,
+        wgs84_bounds: [[50.84513604544582, 6.005879513311762], [50.84629629446326, 6.0077121394985875]]
+      },
+      {
+        patch_id: "tile-170000-460000_r08704_c13824",
+        tile_id: "tile-170000-460000",
+        split: "test",
+        is_urban: false,
+        boundary_pixels: 22566,
+        boundary_density: 0.0861,
+        wgs84_bounds: [[52.19706791456925, 5.657144437902333], [52.198222649306985, 5.659023609191707]]
+      },
+      {
+        patch_id: "tile-190000-310000_r23552_c00000",
+        tile_id: "tile-190000-310000",
+        split: "test",
+        is_urban: true,
+        boundary_pixels: 27599,
+        boundary_density: 0.1053,
+        wgs84_bounds: [[50.81466127556878, 5.883791078362932], [50.815819622414985, 5.885619499505221]]
+      },
+      {
+        patch_id: "tile-190000-310000_r23040_c35328",
+        tile_id: "tile-190000-310000",
+        split: "test",
+        is_urban: true,
+        boundary_pixels: 27507,
+        boundary_density: 0.1049,
+        wgs84_bounds: [[50.81520329183803, 6.009112483531792], [50.81636358808081, 6.010944003155219]]
+      },
+      {
+        patch_id: "tile-170000-460000_r30208_c14848",
+        tile_id: "tile-170000-460000",
+        split: "test",
+        is_urban: true,
+        boundary_pixels: 25210,
+        boundary_density: 0.0962,
+        wgs84_bounds: [[52.14874073122335, 5.660592244326847], [52.149895528595685, 5.662469466786044]]
+      },
+      {
+        patch_id: "tile-170000-460000_r07168_c00000",
+        tile_id: "tile-170000-460000",
+        split: "test",
+        is_urban: false,
+        boundary_pixels: 14010,
+        boundary_density: 0.0534,
+        wgs84_bounds: [[52.200624879078376, 5.606613211292522], [52.201778815246904, 5.608491234059478]]
+      },
+      {
+        patch_id: "tile-170000-460000_r06144_c11776",
+        tile_id: "tile-170000-460000",
+        split: "test",
+        is_urban: false,
+        boundary_pixels: 12787,
+        boundary_density: 0.0488,
+        wgs84_bounds: [[52.20283711099474, 5.649689725638742], [52.203991727047864, 5.651568948946761]]
+      },
+      {
+        patch_id: "tile-170000-460000_r11264_c13824",
+        tile_id: "tile-170000-460000",
+        split: "test",
+        is_urban: false,
+        boundary_pixels: 12590,
+        boundary_density: 0.048,
+        wgs84_bounds: [[52.191315732495404, 5.65710958515607], [52.19247046768453, 5.658988512796106]]
+      },
+      {
+        patch_id: "tile-190000-350000_r18432_c35840",
+        tile_id: "tile-190000-350000",
+        split: "val",
+        is_urban: true,
+        boundary_pixels: 31883,
+        boundary_density: 0.1216,
+        wgs84_bounds: [[51.185082004838904, 6.015949957822749], [51.18624243386573, 6.017796426836304]]
+      },
+      {
+        patch_id: "tile-190000-350000_r19456_c24064",
+        tile_id: "tile-190000-350000",
+        split: "val",
+        is_urban: true,
+        boundary_pixels: 25578,
+        boundary_density: 0.0976,
+        wgs84_bounds: [[51.18300188148034, 5.973815152971465], [51.184161653956394, 5.975660493550361]]
+      },
+      {
+        patch_id: "tile-100000-500000_r38400_c29184",
+        tile_id: "tile-100000-500000",
+        split: "train",
+        is_urban: true,
+        boundary_pixels: 36347,
+        boundary_density: 0.1387,
+        wgs84_bounds: [[52.48808283514576, 4.684852022706157], [52.48924428791025, 4.686754671251456]]
+      },
+      {
+        patch_id: "tile-100000-470000_r17408_c09728",
+        tile_id: "tile-100000-470000",
+        split: "train",
+        is_urban: true,
+        boundary_pixels: 33912,
+        boundary_density: 0.1294,
+        wgs84_bounds: [[52.26519372222804, 4.6171176853014275], [52.26635627157651, 4.619012494197997]]
+      }
+    ];
+
+    let isBackendLive = false;
+    let wakePollInterval = null;
+    let keepAliveInterval = null;
+
+    function updateModalStatus(isLive, statusText, latencyText) {
+      const dot = document.getElementById('modalStatusDot');
+      const statusEl = document.getElementById('modalStatusText');
+      const latEl = document.getElementById('modalLatencyText');
+      if (!dot || !statusEl || !latEl) return;
+
+      if (isLive) {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
+        statusEl.className = 'text-xs font-semibold text-emerald-400';
+      } else {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse';
+        statusEl.className = 'text-xs font-semibold text-rose-400';
+      }
+      statusEl.innerText = statusText;
+      latEl.innerText = latencyText;
+    }
+
+    function openApiModal() {
+      const modal = document.getElementById('apiConfigModal');
+      const input = document.getElementById('inputApiBase');
+      if (!modal || !input) return;
+      input.value = API_BASE || '';
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeApiModal() {
+      const modal = document.getElementById('apiConfigModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // Adaptive Health Check with Render Cold-Start Polling & Auto-Recovery
+    async function checkApiHealth(userInitiated = false) {
       const dot = document.getElementById('apiStatusDot');
       const label = document.getElementById('apiStatusLabel');
       if (!dot || !label) return;
 
-      dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-ping';
-      label.innerText = 'API: Connecting...';
-
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 6000);
-        const res = await fetch(`${API_BASE}/api/health`, { signal: controller.signal });
-        clearTimeout(timeoutId);
-
-        if (res.ok) {
-          const data = await res.json();
-          dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
-          label.innerText = `API: Live (${data.device || 'Active'})`;
-        } else {
-          dot.className = 'w-2 h-2 rounded-full bg-amber-500';
-          label.innerText = `API: HTTP ${res.status}`;
-        }
-      } catch (err) {
-        dot.className = 'w-2 h-2 rounded-full bg-rose-500';
-        label.innerText = 'API: Offline (Click to config)';
+      if (wakePollInterval) {
+        clearInterval(wakePollInterval);
+        wakePollInterval = null;
       }
+
+      let attempt = 0;
+      const maxAttempts = 20; // 20 attempts * 3s = 60s max waking time
+      const startTime = Date.now();
+
+      const updateWakingUI = () => {
+        const elapsedSec = Math.max(1, Math.round((Date.now() - startTime) / 1000));
+        dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-ping';
+        if (elapsedSec < 3) {
+          label.innerText = 'API: Connecting...';
+        } else {
+          label.innerText = `API: Waking backend (${elapsedSec}s)...`;
+        }
+        updateModalStatus(false, `Waking Render backend (${elapsedSec}s)...`, 'Cold booting');
+      };
+
+      updateWakingUI();
+
+      const pingOnce = async () => {
+        attempt++;
+        const pingStart = performance.now();
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 9000);
+          
+          let targetUrl = `${API_BASE || ''}/api/health`;
+          let res = await fetch(targetUrl, { signal: controller.signal, cache: 'no-store' });
+          clearTimeout(timeoutId);
+
+          if (!res.ok && API_BASE && API_BASE !== '') {
+            try {
+              const fallbackRes = await fetch('/api/health', { cache: 'no-store' });
+              if (fallbackRes.ok) res = fallbackRes;
+            } catch (_) {}
+          }
+
+          if (res.ok) {
+            const data = await res.json();
+            const latencyMs = Math.round(performance.now() - pingStart);
+            isBackendLive = true;
+
+            if (wakePollInterval) {
+              clearInterval(wakePollInterval);
+              wakePollInterval = null;
+            }
+
+            dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+            label.innerText = `API: Live (${data.device ? data.device.toUpperCase() : 'Active'})`;
+            updateModalStatus(true, `Live (${data.device ? data.device.toUpperCase() : 'Active'})`, `${latencyMs} ms`);
+
+            // Start background heartbeat to prevent Render from sleeping while browsing
+            startKeepAlive();
+
+            // Refresh samples and layers if initial load happened while backend was sleeping
+            if (!currentGeoJSON) {
+              loadSamples(true);
+            }
+
+            if (userInitiated || attempt > 2) {
+              showToast(`✓ AI Backend is live & connected (${latencyMs}ms)!`);
+            }
+            return true;
+          }
+        } catch (err) {
+          // Render free tier is cold booting
+        }
+
+        updateWakingUI();
+
+        if (attempt >= maxAttempts) {
+          if (wakePollInterval) {
+            clearInterval(wakePollInterval);
+            wakePollInterval = null;
+          }
+          dot.className = 'w-2 h-2 rounded-full bg-rose-500';
+          label.innerText = 'API: Offline (Click to config)';
+          updateModalStatus(false, 'Offline (Timeout after 60s)', 'Offline');
+          if (userInitiated) {
+            showToast('Unable to connect to backend. Verify your Render URL.');
+          }
+          return false;
+        }
+        return false;
+      };
+
+      const initialSuccess = await pingOnce();
+      if (!initialSuccess) {
+        wakePollInterval = setInterval(async () => {
+          await pingOnce();
+        }, 3000);
+      }
+    }
+
+    // In-browser keep-alive heartbeat: pings Render every 4 minutes so it never goes to sleep during user sessions
+    function startKeepAlive() {
+      if (keepAliveInterval) clearInterval(keepAliveInterval);
+      keepAliveInterval = setInterval(async () => {
+        try {
+          await fetch(`${API_BASE || ''}/api/health`, { cache: 'no-store' });
+        } catch (_) {}
+      }, 240000); // 4 minutes
     }
 
     let map = null;
@@ -597,66 +948,106 @@
       }, 200);
     }
 
-    // Fetch and populate demo samples
-    async function loadSamples() {
+    // Fetch and populate demo samples (with instant static fallback so UI is never blocked)
+    async function loadSamples(isRefresh = false) {
+      let samplesList = [];
+
+      // If initial samples already exist and this isn't a forced refresh, keep current
+      if (!isRefresh && Object.keys(samplesMap).length > 0) {
+        return;
+      }
+
+      // 1. If backend is live or we haven't loaded anything yet, try fetching live samples from backend
       try {
-        const res = await fetch(`${API_BASE}/api/demo-samples`);
-        const data = await res.json();
-        const select = document.getElementById('sampleSelect');
-        select.innerHTML = '';
-
-        if (data.samples && data.samples.length > 0) {
-          data.samples.forEach((s) => {
-            samplesMap[s.patch_id] = s;
-            const opt = document.createElement('option');
-            opt.value = s.patch_id;
-            
-            let label = s.patch_id;
-            if (s.patch_id === 'tile-190000-310000_r24576_c02048') {
-              label = `🏡 Residential Parcel Blocks — ${s.patch_id}`;
-            } else if (s.patch_id === 'tile-100000-470000_r04608_c21504') {
-              label = `🏢 High-Density Urban Grid — ${s.patch_id}`;
-            } else if (s.patch_id === 'tile-190000-310000_r01024_c37376') {
-              label = `🏘️ Urban Subdivisions — ${s.patch_id}`;
-            } else if (s.patch_id === 'tile-190000-310000_r05120_c38912') {
-              label = `🏠 Residential Neighborhood — ${s.patch_id}`;
-            } else if (s.patch_id === 'tile-190000-310000_r09728_c34304') {
-              label = `⭐ SIH Benchmark Urban — ${s.patch_id}`;
-            } else if (s.patch_id === 'tile-170000-460000_r08704_c13824') {
-              label = `🌾 Rural Agricultural Land — ${s.patch_id}`;
-            } else if (s.is_urban) {
-              label = `🏢 Urban (${s.split.toUpperCase()}) — ${s.patch_id}`;
-            } else {
-              label = `🌾 Rural (${s.split.toUpperCase()}) — ${s.patch_id}`;
-            }
-
-            opt.innerText = label;
-            opt.dataset.split = s.split;
-            opt.dataset.urban = s.is_urban ? 'Urban Parcels' : 'Rural Parcels';
-            opt.dataset.density = s.boundary_density;
-            select.appendChild(opt);
-          });
-
-          // Priority select the cleanest residential parcel block sample
-          const priority = 'tile-190000-310000_r24576_c02048';
-          if (samplesMap[priority]) {
-            select.value = priority;
-            selectSample(priority);
-          } else {
-            selectSample(data.samples[0].patch_id);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3500);
+        const res = await fetch(`${API_BASE || ''}/api/demo-samples`, { signal: controller.signal, cache: 'no-store' });
+        clearTimeout(timeoutId);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.samples && data.samples.length > 0) {
+            samplesList = data.samples;
           }
         }
-      } catch (err) {
-        console.error("Failed to load samples:", err);
-        showToast("Connecting to Render backend... (Free tier may take ~30s on cold start)");
+      } catch (_) {}
+
+      // 2. Fallback to static manifest file on Vercel edge, or embedded FALLBACK_MANIFEST
+      if (!samplesList || samplesList.length === 0) {
+        try {
+          const res = await fetch('/demo_data/manifest.json', { cache: 'no-store' });
+          if (res.ok) {
+            const manifest = await res.json();
+            samplesList = manifest.map(row => ({
+              patch_id: row.patch_id,
+              tile_id: row.tile_id,
+              split: row.split,
+              is_urban: !!row.is_urban,
+              boundary_pixels: row.boundary_pixels || 0,
+              boundary_density: row.boundary_density || 0.05,
+              image_url: `/demo_data/images/${row.patch_id}.png`,
+              mask_url: `/demo_data/images/${row.patch_id}.png`,
+              wgs84_bounds: row.wgs84_bounds
+            }));
+          }
+        } catch (_) {}
       }
+
+      if (!samplesList || samplesList.length === 0) {
+        samplesList = FALLBACK_MANIFEST.map(row => ({
+          ...row,
+          image_url: `/demo_data/images/${row.patch_id}.png`,
+          mask_url: `/demo_data/images/${row.patch_id}.png`
+        }));
+      }
+
+      const select = document.getElementById('sampleSelect');
+      const prevSelected = currentPatchId;
+      select.innerHTML = '';
+
+      samplesList.forEach((s) => {
+        samplesMap[s.patch_id] = s;
+        const opt = document.createElement('option');
+        opt.value = s.patch_id;
+        
+        let label = s.patch_id;
+        if (s.patch_id === 'tile-190000-310000_r24576_c02048') {
+          label = `🏡 Residential Parcel Blocks — ${s.patch_id}`;
+        } else if (s.patch_id === 'tile-100000-470000_r04608_c21504') {
+          label = `🏢 High-Density Urban Grid — ${s.patch_id}`;
+        } else if (s.patch_id === 'tile-190000-310000_r01024_c37376') {
+          label = `🏘️ Urban Subdivisions — ${s.patch_id}`;
+        } else if (s.patch_id === 'tile-190000-310000_r05120_c38912') {
+          label = `🏠 Residential Neighborhood — ${s.patch_id}`;
+        } else if (s.patch_id === 'tile-190000-310000_r09728_c34304') {
+          label = `⭐ SIH Benchmark Urban — ${s.patch_id}`;
+        } else if (s.patch_id === 'tile-170000-460000_r08704_c13824') {
+          label = `🌾 Rural Agricultural Land — ${s.patch_id}`;
+        } else if (s.is_urban) {
+          label = `🏢 Urban (${s.split.toUpperCase()}) — ${s.patch_id}`;
+        } else {
+          label = `🌾 Rural (${s.split.toUpperCase()}) — ${s.patch_id}`;
+        }
+
+        opt.innerText = label;
+        opt.dataset.split = s.split;
+        opt.dataset.urban = s.is_urban ? 'Urban Parcels' : 'Rural Parcels';
+        opt.dataset.density = s.boundary_density;
+        select.appendChild(opt);
+      });
+
+      const targetPatch = (prevSelected && samplesMap[prevSelected])
+        ? prevSelected 
+        : (samplesMap['tile-190000-310000_r24576_c02048'] ? 'tile-190000-310000_r24576_c02048' : samplesList[0].patch_id);
+      
+      select.value = targetPatch;
+      selectSample(targetPatch);
     }
 
     function selectSample(patchId) {
       currentPatchId = patchId;
       const sample = samplesMap[patchId];
       const select = document.getElementById('sampleSelect');
-      const opt = select.querySelector(`option[value="${patchId}"]`);
+      const opt = select ? select.querySelector(`option[value="${patchId}"]`) : null;
       if (opt) {
         document.getElementById('sampleSplit').innerText = opt.dataset.split.toUpperCase();
         document.getElementById('sampleUrban').innerText = opt.dataset.urban;
@@ -664,12 +1055,26 @@
       }
 
       // Load Aerial Image overlay onto map using actual geographic patch bounds
-      const imgUrl = `${API_BASE}/api/sample-image/${patchId}`;
       const bounds = (sample && sample.wgs84_bounds) ? sample.wgs84_bounds : [[52.2940, 4.6590], [52.2960, 4.6620]];
       _lastBounds = bounds;
       
+      // Preferred URL is backend endpoint, with automatic static edge fallback if backend is waking
+      const backendImgUrl = `${API_BASE || ''}/api/sample-image/${patchId}`;
+      const staticImgUrl = `/demo_data/images/${patchId}.png`;
+
       if (aerialLayer) map.removeLayer(aerialLayer);
-      aerialLayer = L.imageOverlay(imgUrl, bounds, { opacity: 1.0 }).addTo(map);
+      
+      // If backend is not yet live, load static image immediately so user sees imagery instantly
+      const primaryUrl = isBackendLive ? backendImgUrl : staticImgUrl;
+      aerialLayer = L.imageOverlay(primaryUrl, bounds, { opacity: 1.0 });
+      aerialLayer.on('error', () => {
+        // Fall back to static asset if backend fetch errored
+        if (aerialLayer) map.removeLayer(aerialLayer);
+        aerialLayer = L.imageOverlay(staticImgUrl, bounds, { opacity: 1.0 }).addTo(map);
+      });
+      if (document.getElementById('layerAerial').checked) {
+        aerialLayer.addTo(map);
+      }
       map.fitBounds(bounds, { padding: [35, 35] });
 
       // Clean old context & heatmap layers
@@ -688,7 +1093,7 @@
       if (document.getElementById('layerBuildings').checked) toggleSupportingLayer('buildings', true);
       if (document.getElementById('layerRoads').checked) toggleSupportingLayer('roads', true);
 
-      // Auto-trigger clean AI inference & vectorization pipeline
+      // Auto-trigger clean AI inference & vectorization pipeline if backend is active
       runInference();
     }
 
@@ -706,7 +1111,20 @@
       clearGroundTruthVectors();
 
       try {
-        const res = await fetch(`${API_BASE}/api/ground-truth-vector/${currentPatchId}`);
+        let res = null;
+        if (isBackendLive) {
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 4000);
+            res = await fetch(`${API_BASE || ''}/api/ground-truth-vector/${currentPatchId}`, { signal: controller.signal });
+            clearTimeout(timeoutId);
+          } catch (_) {}
+        }
+
+        if (!res || !res.ok) {
+          res = await fetch(`/demo_data/vectors/${currentPatchId}.geojson`);
+        }
+
         const data = await res.json();
         currentGTGeoJSON = data;
 
@@ -755,7 +1173,7 @@
         }).addTo(map);
 
       } catch (err) {
-        console.error("Failed to load GT vectors:", err);
+        console.warn("Notice: Loaded ground-truth layer:", err);
       }
     }
 
@@ -771,7 +1189,7 @@
         showToast("✓ Cadastral extraction complete: AI solid border lines & parcel polygons generated!");
       } catch (err) {
         console.error("Auto pipeline failed:", err);
-        showToast("Error executing pipeline.");
+        showToast(isBackendLive ? "Error executing pipeline." : "Render backend is waking up (~30s). Please retry in a moment.");
       } finally {
         btn.disabled = false;
         btn.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4 text-emerald-200"></i> <span>Run AI Cadastral Extraction (1-Click)</span>`;
@@ -785,13 +1203,18 @@
       const modelName = document.getElementById('modelSelector').value;
       const btn = document.getElementById('btnInfer');
       btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i> Predicting...`;
+      lucide.createIcons();
       
       try {
-        const res = await fetch(`${API_BASE}/api/predict`, {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 45000); // 45s for cold start tolerance
+        const res = await fetch(`${API_BASE || ''}/api/predict`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ patch_id: currentPatchId, model_name: modelName })
+          body: JSON.stringify({ patch_id: currentPatchId, model_name: modelName }),
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
         const data = await res.json();
         
         const bounds = data.wgs84_bounds || (aerialLayer ? aerialLayer.getBounds() : [[52.2940, 4.6590], [52.2960, 4.6620]]);
@@ -807,8 +1230,12 @@
         lucide.createIcons();
         await runVectorization();
       } catch (err) {
-        console.error("Inference error:", err);
-        btn.innerHTML = `Error`;
+        if (!isBackendLive) {
+          btn.innerHTML = `<i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i> <span>Waking...</span>`;
+        } else {
+          btn.innerHTML = `<i data-lucide="alert-circle" class="w-3.5 h-3.5 text-rose-400"></i> <span>Retry</span>`;
+        }
+        lucide.createIcons();
       }
     }
 
@@ -822,9 +1249,12 @@
 
       const btn = document.getElementById('btnVectorize');
       btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin text-cyan-400"></i> Vectorizing...`;
+      lucide.createIcons();
 
       try {
-        const res = await fetch(`${API_BASE}/api/vectorize`, {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 45000);
+        const res = await fetch(`${API_BASE || ''}/api/vectorize`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -834,8 +1264,10 @@
             min_length_m: minLength,
             min_component_size: 40,
             merge_contiguous: mergeContiguous
-          })
+          }),
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
         const data = await res.json();
         currentGeoJSON = data.geojson;
         currentParcelsGeoJSON = data.parcels_geojson;
@@ -860,8 +1292,12 @@
         btn.innerHTML = `<i data-lucide="git-commit" class="w-3.5 h-3.5 text-cyan-400"></i> <span>2. Vectorize</span>`;
         lucide.createIcons();
       } catch (err) {
-        console.error("Vectorization error:", err);
-        btn.innerHTML = `Error`;
+        if (!isBackendLive) {
+          btn.innerHTML = `<i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i> <span>Waking...</span>`;
+        } else {
+          btn.innerHTML = `<i data-lucide="alert-circle" class="w-3.5 h-3.5 text-rose-400"></i> <span>Retry</span>`;
+        }
+        lucide.createIcons();
       }
     }
 
@@ -1117,23 +1553,86 @@
       checkApiHealth();
       loadSamples();
 
-      // Backend API Settings click modal
+      // Backend API Settings Custom Modal Wiring
       const btnApi = document.getElementById('btnApiSettings');
+      const apiModal = document.getElementById('apiConfigModal');
+      const inputApi = document.getElementById('inputApiBase');
+      const btnCloseModal = document.getElementById('btnCloseApiModal');
+      const btnCancelModal = document.getElementById('btnCancelApiModal');
+      const btnSaveModal = document.getElementById('btnSaveApiSettings');
+      const btnTestModal = document.getElementById('btnTestApiConnection');
+
       if (btnApi) {
-        btnApi.addEventListener('click', () => {
-          const current = API_BASE || '';
-          const input = prompt(
-            "Configure CadastreVision Backend API Endpoint:\n\nEnter your Render backend URL (e.g. https://cadastrevision-skygen.onrender.com)\nOr leave empty to use default remote / local host:",
-            current
-          );
-          if (input !== null) {
-            const cleaned = input.trim().replace(/\/+$/, '');
-            API_BASE = cleaned;
-            localStorage.setItem('CADASTRE_API_BASE', cleaned);
-            showToast(`API Base set to: ${cleaned || 'Default Origin'}`);
-            checkApiHealth();
-            loadSamples();
+        btnApi.addEventListener('click', openApiModal);
+      }
+      if (btnCloseModal) {
+        btnCloseModal.addEventListener('click', closeApiModal);
+      }
+      if (btnCancelModal) {
+        btnCancelModal.addEventListener('click', closeApiModal);
+      }
+      if (apiModal) {
+        apiModal.addEventListener('click', (e) => {
+          if (e.target === apiModal) closeApiModal();
+        });
+      }
+
+      // Presets
+      document.getElementById('presetRender')?.addEventListener('click', () => {
+        if (inputApi) inputApi.value = DEFAULT_REMOTE_API;
+      });
+      document.getElementById('presetVercelProxy')?.addEventListener('click', () => {
+        if (inputApi) inputApi.value = '/api';
+      });
+      document.getElementById('presetLocal')?.addEventListener('click', () => {
+        if (inputApi) inputApi.value = 'http://localhost:8000';
+      });
+
+      // Test Connection / Wake-Up in Modal
+      if (btnTestModal) {
+        btnTestModal.addEventListener('click', async () => {
+          const testUrl = (inputApi?.value || '').trim().replace(/\/+$/, '');
+          btnTestModal.disabled = true;
+          btnTestModal.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i> <span>Pinging...</span>`;
+          lucide.createIcons();
+          updateModalStatus(false, 'Sending wake ping to server...', 'Waiting...');
+
+          const t0 = performance.now();
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 12000);
+            const res = await fetch(`${testUrl || ''}/api/health`, { signal: controller.signal, cache: 'no-store' });
+            clearTimeout(timeoutId);
+            const latency = Math.round(performance.now() - t0);
+
+            if (res.ok) {
+              const data = await res.json();
+              updateModalStatus(true, `Live (${data.device ? data.device.toUpperCase() : 'Active'})`, `${latency} ms`);
+              showToast(`✓ Server responded in ${latency}ms!`);
+            } else {
+              updateModalStatus(false, `Server HTTP ${res.status}`, `${latency} ms`);
+            }
+          } catch (err) {
+            updateModalStatus(false, 'Server waking up (~30s) or unreachable. Click to keep waking.', 'Cold boot');
+            showToast('Server did not respond within 12s. It may still be cold-starting.');
+          } finally {
+            btnTestModal.disabled = false;
+            btnTestModal.innerHTML = `<i data-lucide="activity" class="w-3.5 h-3.5"></i> <span>Test / Wake Up</span>`;
+            lucide.createIcons();
           }
+        });
+      }
+
+      // Save Settings in Modal
+      if (btnSaveModal) {
+        btnSaveModal.addEventListener('click', () => {
+          const cleaned = (inputApi?.value || '').trim().replace(/\/+$/, '');
+          API_BASE = cleaned;
+          localStorage.setItem('CADASTRE_API_BASE', cleaned);
+          showToast(`API Base set to: ${cleaned || 'Default (Vercel Proxy)'}`);
+          closeApiModal();
+          checkApiHealth(true);
+          loadSamples(true);
         });
       }
 

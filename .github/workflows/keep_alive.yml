@@ -1,0 +1,25 @@
+name: Render Backend 24/7 Keep-Alive
+
+on:
+  schedule:
+    # Runs every 12 minutes to keep the Render free-tier container warm and prevent idle spin-down
+    - cron: '*/12 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions UI
+
+jobs:
+  ping-render:
+    name: Ping FastAPI Backend Health
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render Backend
+        run: |
+          ENDPOINT="https://cadastrevision-skygen-r5hn.onrender.com/api/health"
+          echo "Pinging CadastreVision AI Backend: $ENDPOINT"
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}\nTIME_TOTAL:%{time_total}s" --max-time 60 "$ENDPOINT")
+          echo "$RESPONSE"
+          STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS" | cut -d':' -f2)
+          if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 400 ]; then
+            echo "✓ Render backend is active, healthy, and warm (HTTP $STATUS)!"
+          else
+            echo "Render backend ping status: HTTP $STATUS"
+          fi

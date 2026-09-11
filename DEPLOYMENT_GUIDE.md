@@ -53,13 +53,20 @@ Expand **"Advanced"** at the bottom:
 3. Building takes **2–4 minutes**. Once complete, the status turns green: **"Live"**.
 4. Copy your backend URL at the top of the dashboard:
    ```text
-   https://cadastrevision-skygen.onrender.com
+   https://cadastrevision-skygen-r5hn.onrender.com
    ```
-5. Test it in your browser: `https://cadastrevision-skygen.onrender.com/api/health`
+5. Test it in your browser: `https://cadastrevision-skygen-r5hn.onrender.com/api/health`
    - You should see: `{"status":"healthy","system":"SIH26012 Cadastral Extraction System",...}`
 
 > [!NOTE]
-> **Render Free Tier Cold Start**: On the free tier, Render puts the container to sleep after 15 minutes of inactivity. When you open it after a while, the very first request takes **30–45 seconds** to wake up. Subsequent requests run instantly!
+> **Understanding Render Free Tier Cold Starts**:
+> - On Render's Free tier, the web service automatically spins down (sleeps) after 15 minutes of inactivity to save compute.
+> - When waking up, the very first request takes **25–40 seconds** to boot up the Docker container. Once awake, all subsequent requests respond in **<200ms**.
+> - **Built-in Resilience**:
+>   1. **Zero Blank Screen**: The WebGIS frontend loads demo patch imagery and ground-truth boundary lines instantly from edge assets with zero delay!
+>   2. **Adaptive Wake-Up Polling**: The frontend displays a live waking indicator (`API: Waking backend (~25s)...`) with an animated pulse and automatic retry loop until the server responds.
+>   3. **In-Browser Keep-Alive**: While any user has the tab open, the frontend sends a health ping every 4 minutes, ensuring Render never goes back to sleep during active sessions.
+>   4. **24/7 GitHub Actions Keep-Alive**: The repository includes `.github/workflows/keep_alive.yml`, which automatically pings the backend every 12 minutes to keep it warm around the clock!
 
 ---
 
@@ -76,7 +83,7 @@ Vercel serves the interactive map, slide deck, and topology audit deck with zero
 2. Locate `KYaswanthReddy/SIH` in your repository list and click **"Import"**.
 
 ### Step 3: Configure Project Settings
-- **Project Name**: `sih-cadastrevision` (or any name you prefer)
+- **Project Name**: `sih-cadastrevision` (or `cadastrevision-skygen`)
 - **Framework Preset**: **Other**
 - **Root Directory**: `./` *(leave as root; our [`vercel.json`](file:///Users/kyashwanth/Documents/sih/vercel.json) handles routing)*
 - **Build and Output Settings**: Leave empty / default.
@@ -87,7 +94,7 @@ Vercel serves the interactive map, slide deck, and topology audit deck with zero
 2. Vercel compiles and publishes the edge deployment in **15–30 seconds**.
 3. You will get your live public URL:
    ```text
-   https://sih-cadastrevision.vercel.app
+   https://cadastrevision-skygen.vercel.app
    ```
 
 ---
@@ -97,18 +104,21 @@ Vercel serves the interactive map, slide deck, and topology audit deck with zero
 We have built 3 automatic mechanisms so the frontend and backend talk to each other without configuration errors:
 
 ### Method 1: Automatic Connection (Default)
-- If your Render backend is named `cadastrevision-skygen`, the frontend automatically connects to `https://cadastrevision-skygen.onrender.com` without doing anything!
+- The frontend defaults directly to `https://cadastrevision-skygen-r5hn.onrender.com` without requiring any manual setup!
 
-### Method 2: One-Click Navbar Setting (If using a custom name)
-1. Open your live Vercel site: `https://your-project.vercel.app`
-2. In the top navigation bar, click the **"API: ..."** status pill.
-3. A modal prompt appears: paste your Render backend URL (e.g. `https://your-custom-backend.onrender.com`).
-4. Click **OK**. The site immediately connects, verifies health, and loads sample tiles!
+### Method 2: Connection Manager Modal (In Top Navbar)
+1. Open your live Vercel site: `https://cadastrevision-skygen.vercel.app`
+2. In the top navigation bar, click the **"API: ..."** status button.
+3. An interactive glassmorphic modal opens:
+   - Check real-time server state, ping latency, and device status.
+   - Click **"Test / Wake Up"** to actively trigger container spin-up.
+   - Click quick preset buttons (Render Default, Vercel Edge Proxy, Localhost).
+   - Click **"Save & Connect"**.
 
 ### Method 3: Direct URL Parameter (Best for Evaluators)
 You can send evaluators a single link that pre-configures the backend:
 ```text
-https://your-project.vercel.app/?api=https://cadastrevision-skygen.onrender.com
+https://cadastrevision-skygen.vercel.app/?api=https://cadastrevision-skygen-r5hn.onrender.com
 ```
 
 ---
