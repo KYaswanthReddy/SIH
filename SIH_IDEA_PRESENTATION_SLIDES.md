@@ -15,11 +15,11 @@
 
 ### Slide Body
 - **• Problem Statement ID –** `SIH26012`
-- **• Problem Statement Title –** `Automated Cadastral Feature Extraction & Urban Parcel Mapping System`
-- **• Theme –** `Geospatial Technology / Smart Cities / Land Governance`
+- **• Problem Statement Title –** `AI-Based Automated Urban Parcel Mapping and Cadastral Feature Extraction System using Drone Imagery`
+- **• Theme –** `Smart Automation`
 - **• PS Category –** `Software`
-- **• Team ID –** `69110`
-- **• Team Name :-** `SkyGen`
+- **• Team ID –** `TX-SIH26-097`
+- **• Team Name :-** `Skygen`
 - **• College Name :-** `[Your College / Institute Name Here]`
 
 ### Right Side Graphic Card
@@ -92,8 +92,9 @@
 `Aerial Imagery (0.25m GSD)` → `Patch Extraction (512×512)` → `PMG Multiscale Dilated Encoding` → `MixStyle Domain Generalization` → `Dual Heads (Boundary + 8-Way Affinity)` → `Medial-Axis Thinning` → `NetworkX Branch Tracing` → `Douglas-Peucker Simplification` → `Closed Parcel Polygonization` → `ISO 19107 STRtree Topology Audit` → `WebGIS Interface & GeoJSON Export`
 
 #### Project Links Demo:-
-- **• Github:** `https://github.com/your-org/sih26012`
-- **• Demo Live Prototype :** `http://localhost:8000`
+- **• Github:** `https://github.com/KYaswanthReddy/SIH.git`
+- **• Demo Live Prototype :** `https://cadastrevision-skygen.vercel.app/frontend`
+- **• PPT Slide Deck (Google Drive):** `https://drive.google.com/file/d/1YWDKuDSAwqNlV3hOpCKi00lpFrUSjXpq/view?usp=sharing`
 
 ### Right Column: Core Module Architecture
 - **FRONTEND LAYER**: Leaflet 1.9.4 | Tailwind CSS | HTML5 Canvas | ESRI Satellite Basemap | Lucide GIS Icons
@@ -197,8 +198,9 @@
 - c. OpenStreetMap Cadastral Guidelines: `https://wiki.openstreetmap.org`
 
 #### • Project Links Demo:-
-- **• Github:** `https://github.com/your-org/sih26012`
-- **• Demo Live Prototype :** `http://localhost:8000`
+- **• Github:** `https://github.com/KYaswanthReddy/SIH.git`
+- **• Demo Live Prototype :** `https://cadastrevision-skygen.vercel.app/frontend`
+- **• PPT Slide Deck (Google Drive):** `https://drive.google.com/file/d/1YWDKuDSAwqNlV3hOpCKi00lpFrUSjXpq/view?usp=sharing`
 
 ### Right Column: Feature Comparison Matrix Table
 | Feature / Capability | Our Platform | Manual DGPS | Generic AI | ArcGIS Pro |
